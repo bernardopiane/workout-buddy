@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:workout_buddy/model/exercise.dart';
+import 'package:workout_buddy/pages/exercise_detail_page.dart';
 
 class ExerciseCard extends StatelessWidget {
   const ExerciseCard({
@@ -20,6 +21,10 @@ class ExerciseCard extends StatelessWidget {
         // Add InkWell for ink splash effect on tap (if needed)
         borderRadius: BorderRadius.circular(16.0),
         onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ExerciseDetail(exercise: exercise)),
+          );
           // Handle tap action if needed
         },
         child: Padding(
