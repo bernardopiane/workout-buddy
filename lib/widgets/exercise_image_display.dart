@@ -24,9 +24,12 @@ class _ExerciseImageDisplayState extends State<ExerciseImageDisplay> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: _goToNextImage,
-      child: Image.asset(
-        "lib/data/${widget.exercise.images!.elementAt(currentPosition)}",
-        fit: BoxFit.cover,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16.0),
+        child: Image.asset(
+          "lib/data/${widget.exercise.images!.elementAt(currentPosition)}",
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
