@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:workout_buddy/model/exercise.dart';
 
+import '../widgets/exercise_image_display.dart';
+
 class ExerciseDetail extends StatelessWidget {
   const ExerciseDetail({super.key, required this.exercise});
 
@@ -87,26 +89,6 @@ class ExerciseDetail extends StatelessWidget {
           ),
           Text(value ?? 'N/A'),
         ],
-      ),
-    );
-  }
-}
-
-class ExerciseImageDisplay extends StatelessWidget {
-  final Exercise exercise;
-
-  const ExerciseImageDisplay({super.key, required this.exercise});
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16.0),
-      child: AspectRatio(
-        aspectRatio: 16 / 9,
-        child: Image.asset(
-          'lib/data/${exercise.images?.first ?? 'placeholder.jpg'}',
-          fit: BoxFit.cover,
-        ),
       ),
     );
   }
