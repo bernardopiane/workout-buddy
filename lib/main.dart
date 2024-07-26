@@ -21,8 +21,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Workout Buddy',
-      theme: lightTheme,
-      darkTheme: darkTheme,
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
       themeMode: ThemeMode.system, // Use system theme by default
       home: const MainPage(),
     );
