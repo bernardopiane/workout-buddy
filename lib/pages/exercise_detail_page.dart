@@ -22,12 +22,7 @@ class ExerciseDetail extends StatelessWidget {
             const SizedBox(height: 16.0),
             buildSectionTitle(context, 'Instructions'),
             buildInstruction(exercise.instructions, context),
-            const SizedBox(height: 16.0),
-            buildSectionTitle(context, 'Primary Muscles'),
-            buildMuscleChip(exercise.primaryMuscles),
-            const SizedBox(height: 16.0),
-            buildSectionTitle(context, 'Secondary Muscles'),
-            buildMuscleChip(exercise.secondaryMuscles),
+            ..._buildMusclesSection(context),
             const SizedBox(height: 16.0),
             buildSectionTitle(context, 'Details'),
             buildDetailRow('Category', exercise.category),
@@ -91,5 +86,23 @@ class ExerciseDetail extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  List<Widget> _buildMusclesSection(BuildContext context) {
+    List<Widget> widgets = [];
+
+    if (exercise.primaryMuscles!.isNotEmpty) {
+      widgets.add(const SizedBox(height: 16.0));
+      widgets.add(buildSectionTitle(context, 'Primary Muscles'));
+      widgets.add(buildMuscleChip(exercise.primaryMuscles));
+    }
+
+    if (exercise.secondaryMuscles!.isNotEmpty) {
+      widgets.add(const SizedBox(height: 16.0));
+      widgets.add(buildSectionTitle(context, 'Secondary Muscles'));
+      widgets.add(buildMuscleChip(exercise.secondaryMuscles));
+    }
+
+    return widgets;
   }
 }
