@@ -33,15 +33,22 @@ class _MainPageState extends State<MainPage> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasData) {
+              final exercises = snapshot.data!;
+              if (exercises.isNotEmpty) {
+                return ListView.builder(
+                  itemCount: exercises.length,
+                  itemBuilder: (context, index) {
+                    return ExerciseCard(exercise: exercises[index]);
+                  },
+                );
+              } else {
+                return const Center(child: Text('No exercises found'));
+              }
             } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return ExerciseCard(exercise: snapshot.data![index]);
-                },
-              );
+              return const Center(
+                  child: Text(
+                      'Failed to load exercises. Please try again later.'));
             } else {
               return const Center(child: Text('No exercises found'));
             }
