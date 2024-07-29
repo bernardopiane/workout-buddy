@@ -8,7 +8,8 @@ Future<void> main() async {
 
   await Supabase.initialize(
     url: 'https://hieuqpydsjhaxmffqfoc.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZXVxcHlkc2poYXhtZmZxZm9jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjE1MTQ1MjMsImV4cCI6MjAzNzA5MDUyM30.Y38cTModuek0kKNp5Qq8UsB3V073EmB75VahG6a_c0g',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZXVxcHlkc2poYXhtZmZxZm9jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjE1MTQ1MjMsImV4cCI6MjAzNzA5MDUyM30.Y38cTModuek0kKNp5Qq8UsB3V073EmB75VahG6a_c0g',
   );
   runApp(const MyApp());
 }
@@ -21,8 +22,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Workout Buddy',
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
+      theme: lightTheme,
+      darkTheme: darkTheme,
       themeMode: ThemeMode.system, // Use system theme by default
       home: const MainPage(),
     );
