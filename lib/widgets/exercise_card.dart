@@ -29,45 +29,64 @@ class ExerciseCard extends StatelessWidget {
         },
         child: Padding(
           padding: const EdgeInsets.all(12.0), // Adjust padding as needed
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Column(
             children: [
               _buildExerciseImage(),
-              const SizedBox(width: 12.0), // Add spacing between image and text
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      exercise.name.toString(),
-                      style: Theme.of(context).textTheme.headlineMedium,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 8.0), // Add vertical spacing
-                    Text(
-                      exercise.instructions.toString(),
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 8.0), // Add vertical spacing
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'More details →',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+              const SizedBox(width: 12.0),
+              Text(
+                exercise.name.toString(),
+                style: Theme.of(context).textTheme.headlineMedium,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
+              const SizedBox(height: 8.0), // Add vertical spacing
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'More details →',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              // Expanded(
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     mainAxisAlignment: MainAxisAlignment.start,
+              //     children: [
+              //       Text(
+              //         exercise.name.toString(),
+              //         style: Theme.of(context).textTheme.headlineMedium,
+              //         maxLines: 2,
+              //         overflow: TextOverflow.ellipsis,
+              //       ),
+              //       const SizedBox(height: 8.0), // Add vertical spacing
+              //       Text(
+              //         exercise.instructions.toString(),
+              //         style: Theme.of(context).textTheme.bodyMedium,
+              //         maxLines: 3,
+              //         overflow: TextOverflow.ellipsis,
+              //       ),
+              //       const SizedBox(height: 8.0), // Add vertical spacing
+              //       const Row(
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         children: [
+              //           Text(
+              //             'More details →',
+              //             style: TextStyle(
+              //               color: Colors.blue,
+              //               fontWeight: FontWeight.bold,
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //     ],
+              //   ),
+              // ),
+
             ],
           ),
         ),

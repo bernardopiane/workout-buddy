@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:workout_buddy/model/exercise.dart';
+import 'package:workout_buddy/widgets/exercise_level.dart';
 
 import '../widgets/exercise_image_display.dart';
 
@@ -8,101 +9,129 @@ class ExerciseDetail extends StatelessWidget {
 
   final Exercise exercise;
 
+  final bool isFavorite = false;
+  // TODO implement proper favorite using state management
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(exercise.name ?? 'Exercise Detail'),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
+        onPressed: () {
+          debugPrint("Favorite Clicked");
+        },
       ),
-      body: Padding(
+      appBar: AppBar(
+        title: Text(exercise.name ?? 'Exercise Details'),
+        elevation: 4,
+      ),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: ListView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ExerciseImageDisplay(exercise: exercise),
-            const SizedBox(height: 16.0),
-            buildSectionTitle(context, 'Instructions'),
-            buildInstruction(exercise.instructions, context),
-            ..._buildMusclesSection(context),
-            const SizedBox(height: 16.0),
-            buildSectionTitle(context, 'Details'),
-            buildDetailRow('Category', exercise.category),
-            buildDetailRow('Equipment', exercise.equipment),
-            buildDetailRow('Force', exercise.force),
-            buildDetailRow('Level', exercise.level),
-            buildDetailRow('Mechanic', exercise.mechanic),
+            Wrap(
+              children: exercise.instructions
+                      ?.map((muscle) => Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              muscle,
+                              style: const TextStyle(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ))
+                      .toList() ??
+                  [],
+            ),
+            const Text(
+              'Muscles worked on:',
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            ),
+            Row(
+              children: [
+                Wrap(
+                  children: exercise.primaryMuscles
+                          ?.map((muscle) => Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  muscle.toUpperCase(),
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                              ))
+                          .toList() ??
+                      [],
+                ),
+                Wrap(
+                  children: exercise.secondaryMuscles
+                          ?.map((muscle) => Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  muscle.toUpperCase(),
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.normal,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                  ),
+                                ),
+                              ))
+                          .toList() ??
+                      [],
+                ),
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text("Difficulty:"),
+                Text(
+                  exercise.level ?? '',
+                  style: const TextStyle(
+                      fontSize: 18.0, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text("Category:"),
+                Text(
+                  exercise.category ?? '',
+                  style: const TextStyle(
+                      fontSize: 18.0, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text("Equipment:"),
+                Text(
+                  exercise.equipment ?? '',
+                  style: const TextStyle(
+                      fontSize: 18.0, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              'Level: ${exercise.level ?? ''}',
+              style: const TextStyle(fontSize: 16.0),
+            ),
           ],
         ),
       ),
     );
-  }
-
-  Widget buildSectionTitle(BuildContext context, String title) {
-    return Text(
-      title,
-      style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-    );
-  }
-
-  Widget buildInstruction(List<String>? instructions, BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: instructions!.map((instruction) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: Text(
-            instruction,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        );
-      }).toList(),
-    );
-  }
-
-  Widget buildMuscleChip(List<String>? muscles) {
-    return Wrap(
-      spacing: 8.0, // Horizontal spacing between chips
-      runSpacing: 4.0, // Vertical spacing between lines of chips
-      children: muscles!.map((muscle) {
-        return Chip(
-          label: Text(muscle),
-          backgroundColor: Colors.blue.shade100, // Customize the chip color
-        );
-      }).toList(),
-    );
-  }
-
-  Widget buildDetailRow(String label, String? value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        children: [
-          Text(
-            '$label: ',
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Text(value ?? 'N/A'),
-        ],
-      ),
-    );
-  }
-
-  List<Widget> _buildMusclesSection(BuildContext context) {
-    List<Widget> widgets = [];
-
-    if (exercise.primaryMuscles!.isNotEmpty) {
-      widgets.add(const SizedBox(height: 16.0));
-      widgets.add(buildSectionTitle(context, 'Primary Muscles'));
-      widgets.add(buildMuscleChip(exercise.primaryMuscles));
-    }
-
-    if (exercise.secondaryMuscles!.isNotEmpty) {
-      widgets.add(const SizedBox(height: 16.0));
-      widgets.add(buildSectionTitle(context, 'Secondary Muscles'));
-      widgets.add(buildMuscleChip(exercise.secondaryMuscles));
-    }
-
-    return widgets;
   }
 }
