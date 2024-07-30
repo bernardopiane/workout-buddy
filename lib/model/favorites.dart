@@ -9,8 +9,6 @@ class Favorites extends ChangeNotifier {
 
   Favorites() : exercises = {};
 
-  Favorites.fill(Iterable<Exercise> exercises) : exercises = exercises.toSet();
-
   addToFavorites(Exercise e) {
     if (exercises.add(e)) {
       notifyListeners();
