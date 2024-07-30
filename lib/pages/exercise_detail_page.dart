@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_buddy/model/exercise.dart';
 import 'package:workout_buddy/model/favorites.dart';
-import 'package:workout_buddy/widgets/exercise_level.dart';
 
 import '../widgets/exercise_image_display.dart';
 
@@ -21,7 +20,7 @@ class ExerciseDetail extends StatelessWidget {
                 ? Icons.favorite
                 : Icons.favorite_border),
             onPressed: () {
-              favoritesNotifier.handleClick(exercise);
+              favoritesNotifier.toggleFavorite(exercise);
             },
           );
         },
