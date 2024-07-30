@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:workout_buddy/widgets/exercise_card.dart';
 import '../model/exercise.dart';
 
@@ -46,6 +47,8 @@ class _MainPageState extends State<MainPage> {
                 return const Center(child: Text('No exercises found'));
               }
             } else if (snapshot.hasError) {
+              debugPrint(snapshot.error.toString());
+              debugPrint(_futureExercises.toString());
               return const Center(
                   child: Text(
                       'Failed to load exercises. Please try again later.'));
@@ -60,8 +63,7 @@ class _MainPageState extends State<MainPage> {
 
   Future<List<Exercise>> loadExercises(String path) async {
     try {
-      final file = File(path);
-      final contents = await file.readAsString();
+      final contents = await rootBundle.loadString(path);
       final List<dynamic> jsonData = json.decode(contents);
       return jsonData.map((json) => Exercise.fromJson(json)).toList();
     } catch (e) {

@@ -63,6 +63,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+      - lib/data/dataset.json
       - lib/data/Zottman_Preacher_Curl/
       - lib/data/3_4_Sit-Up/
       - lib/data/90_90_Hamstring/
@@ -936,6 +937,7 @@ flutter:
       - lib/data/Yoke_Walk/
       - lib/data/Zercher_Squats/
       - lib/data/Zottman_Curl/
+      - lib/data/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
