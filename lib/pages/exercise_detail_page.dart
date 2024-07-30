@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:workout_buddy/model/exercise.dart';
+import 'package:workout_buddy/model/favorites.dart';
 import 'package:workout_buddy/widgets/exercise_level.dart';
 
 import '../widgets/exercise_image_display.dart';
@@ -9,16 +11,18 @@ class ExerciseDetail extends StatelessWidget {
 
   final Exercise exercise;
 
-  final bool isFavorite = false;
-  // TODO implement proper favorite using state management
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
-        onPressed: () {
-          debugPrint("Favorite Clicked");
+      floatingActionButton: Consumer<Favorites>(
+        builder: (context, favoritesNotifier, child) {
+          return FloatingActionButton(
+            child: Icon(favoritesNotifier.isFavorite(exercise) ? Icons.favorite : Icons.favorite_border),
+            onPressed: () {
+              favoritesNotifier.handleClick(exercise);
+              debugPrint("Favorite Clicked");
+            },
+          );
         },
       ),
       appBar: AppBar(

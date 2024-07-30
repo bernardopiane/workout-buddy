@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:workout_buddy/model/favorites.dart';
 import 'package:workout_buddy/pages/main_page.dart';
 import 'package:workout_buddy/theme_data.dart';
 
@@ -11,7 +13,12 @@ Future<void> main() async {
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZXVxcHlkc2poYXhtZmZxZm9jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjE1MTQ1MjMsImV4cCI6MjAzNzA5MDUyM30.Y38cTModuek0kKNp5Qq8UsB3V073EmB75VahG6a_c0g',
   );
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => Favorites(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
