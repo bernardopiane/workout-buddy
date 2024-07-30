@@ -17,10 +17,11 @@ class ExerciseDetail extends StatelessWidget {
       floatingActionButton: Consumer<Favorites>(
         builder: (context, favoritesNotifier, child) {
           return FloatingActionButton(
-            child: Icon(favoritesNotifier.isFavorite(exercise) ? Icons.favorite : Icons.favorite_border),
+            child: Icon(favoritesNotifier.isFavorite(exercise)
+                ? Icons.favorite
+                : Icons.favorite_border),
             onPressed: () {
               favoritesNotifier.handleClick(exercise);
-              debugPrint("Favorite Clicked");
             },
           );
         },
