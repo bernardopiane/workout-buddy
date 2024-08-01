@@ -16,11 +16,12 @@ class RelatedExercises extends StatelessWidget {
   }
 
   _buildRelatedExercises(BuildContext context, Exercise exercise) {
-    //   fetch all exercises with primary muscle the same as this exercise
+    //   fetch all exercises with primary muscle as this exercise
     Set<Exercise> exerciseMatched =
         Provider.of<ExerciseList>(context, listen: false)
             .getExercisesByMuscle(exercise.primaryMuscles![0]);
-    debugPrint('exercises matched: ${exerciseMatched.length}');
+    // remove this exercise from the list
+    exerciseMatched.remove(exercise);
     return ListView.builder(
       scrollDirection: Axis.horizontal,
       itemCount: exerciseMatched.length,
