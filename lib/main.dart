@@ -5,6 +5,8 @@ import 'package:workout_buddy/model/favorites.dart';
 import 'package:workout_buddy/pages/main_page.dart';
 import 'package:workout_buddy/theme_data.dart';
 
+import 'model/exercise_list.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -14,10 +16,10 @@ Future<void> main() async {
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZXVxcHlkc2poYXhtZmZxZm9jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjE1MTQ1MjMsImV4cCI6MjAzNzA5MDUyM30.Y38cTModuek0kKNp5Qq8UsB3V073EmB75VahG6a_c0g',
   );
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => Favorites(),
-      child: const MyApp(),
-    ),
+    MultiProvider(providers: [
+      ChangeNotifierProvider(create: (_) => Favorites()),
+      ChangeNotifierProvider(create: (_) => ExerciseList())
+    ], child: const MyApp()),
   );
 }
 
@@ -28,6 +30,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Provider.of<Favorites>(context, listen: false).loadFavorites();
+    Provider.of<ExerciseList>(context, listen: false).loadExercises('lib/data/dataset.json');
     return MaterialApp(
       title: 'Workout Buddy',
       theme: lightTheme,

@@ -1,10 +1,9 @@
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:workout_buddy/widgets/exercise_card.dart';
 import '../model/exercise.dart';
+import '../model/exercise_list.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -14,13 +13,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  late Future<List<Exercise>> _futureExercises;
-
-  @override
-  void initState() {
-    super.initState();
-    _futureExercises = loadExercises('lib/data/dataset.json');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,45 +21,20 @@ class _MainPageState extends State<MainPage> {
         title: const Text('Main Page'),
       ),
       body: SafeArea(
-        child: FutureBuilder<List<Exercise>>(
-          future: _futureExercises,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasData) {
-              final exercises = snapshot.data!;
-              if (exercises.isNotEmpty) {
-                return ListView.builder(
-                  itemCount: exercises.length,
-                  itemBuilder: (context, index) {
-                    return ExerciseCard(exercise: exercises[index]);
-                  },
-                );
-              } else {
-                return const Center(child: Text('No exercises found'));
-              }
-            } else if (snapshot.hasError) {
-              debugPrint(snapshot.error.toString());
-              debugPrint(_futureExercises.toString());
-              return const Center(
-                  child: Text(
-                      'Failed to load exercises. Please try again later.'));
-            } else {
+        child: Consumer<ExerciseList>(
+          builder: (context, exerciseList, child) {
+            if(exerciseList.getAllExercises().isEmpty) {
               return const Center(child: Text('No exercises found'));
             }
+            return ListView.builder(
+              itemCount: exerciseList.getAllExercises().length,
+              itemBuilder: (context, index) {
+                return ExerciseCard(exercise: exerciseList.getAllExercises().elementAt(index));
+              },
+            );
           },
         ),
       ),
     );
-  }
-
-  Future<List<Exercise>> loadExercises(String path) async {
-    try {
-      final contents = await rootBundle.loadString(path);
-      final List<dynamic> jsonData = json.decode(contents);
-      return jsonData.map((json) => Exercise.fromJson(json)).toList();
-    } catch (e) {
-      throw Exception('Failed to load exercises: $e');
-    }
   }
 }
