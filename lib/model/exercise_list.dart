@@ -8,7 +8,9 @@ import 'exercise.dart';
 class ExerciseList extends ChangeNotifier {
   Set<Exercise> exercises = <Exercise>{};
 
-  ExerciseList();
+   ExerciseList(){
+    loadExercises('lib/data/dataset.json');
+  }
 
   Future<void> loadExercises(String path) async {
     try {
@@ -21,7 +23,7 @@ class ExerciseList extends ChangeNotifier {
     }
   }
 
-  getAllExercises() {
+  Set<Exercise> getAllExercises() {
     return exercises;
   }
 }

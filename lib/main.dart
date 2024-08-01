@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Provider.of<Favorites>(context, listen: false).loadFavorites();
-    Provider.of<ExerciseList>(context, listen: false).loadExercises('lib/data/dataset.json');
     return MaterialApp(
       title: 'Workout Buddy',
       theme: lightTheme,

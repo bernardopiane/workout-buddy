@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_buddy/widgets/exercise_card.dart';
@@ -13,7 +12,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,15 +21,15 @@ class _MainPageState extends State<MainPage> {
       body: SafeArea(
         child: Consumer<ExerciseList>(
           builder: (context, exerciseList, child) {
-            if(exerciseList.getAllExercises().isEmpty) {
-              return const Center(child: Text('No exercises found'));
-            }
-            return ListView.builder(
-              itemCount: exerciseList.getAllExercises().length,
-              itemBuilder: (context, index) {
-                return ExerciseCard(exercise: exerciseList.getAllExercises().elementAt(index));
-              },
-            );
+            Set<Exercise> exercises = exerciseList.getAllExercises();
+            return exercises.isEmpty
+                ? const Center(child: Text('No exercises found'))
+                : ListView.builder(
+                    itemCount: exercises.length,
+                    itemBuilder: (context, index) {
+                      return ExerciseCard(exercise: exercises.elementAt(index));
+                    },
+                  );
           },
         ),
       ),
