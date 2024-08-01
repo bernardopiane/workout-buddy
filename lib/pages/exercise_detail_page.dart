@@ -4,6 +4,7 @@ import 'package:workout_buddy/model/exercise.dart';
 import 'package:workout_buddy/model/favorites.dart';
 
 import '../widgets/exercise_image_display.dart';
+import '../widgets/related_exercises.dart';
 
 class ExerciseDetail extends StatelessWidget {
   const ExerciseDetail({super.key, required this.exercise});
@@ -133,6 +134,12 @@ class ExerciseDetail extends StatelessWidget {
               'Level: ${exercise.level ?? ''}',
               style: const TextStyle(fontSize: 16.0),
             ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              height: 200,
+              child: RelatedExercises(exercise: exercise),
+            )
           ],
         ),
       ),

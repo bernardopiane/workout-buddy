@@ -8,7 +8,7 @@ import 'exercise.dart';
 class ExerciseList extends ChangeNotifier {
   Set<Exercise> exercises = <Exercise>{};
 
-   ExerciseList(){
+  ExerciseList() {
     loadExercises('lib/data/dataset.json');
   }
 
@@ -25,5 +25,11 @@ class ExerciseList extends ChangeNotifier {
 
   Set<Exercise> getAllExercises() {
     return exercises;
+  }
+
+  Set<Exercise> getExercisesByMuscle(String muscle) {
+    return exercises
+        .where((exercise) => exercise.primaryMuscles!.contains(muscle))
+        .toSet();
   }
 }
