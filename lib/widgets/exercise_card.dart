@@ -23,7 +23,8 @@ class ExerciseCard extends StatelessWidget {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ExerciseDetail(exercise: exercise)),
+            MaterialPageRoute(
+                builder: (context) => ExerciseDetail(exercise: exercise)),
           );
           // Handle tap action if needed
         },
@@ -36,57 +37,24 @@ class ExerciseCard extends StatelessWidget {
               Text(
                 exercise.name.toString(),
                 style: Theme.of(context).textTheme.headlineMedium,
-                maxLines: 2,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 8.0), // Add vertical spacing
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'More details →',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
+              const Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      'More details →',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              // Expanded(
-              //   child: Column(
-              //     crossAxisAlignment: CrossAxisAlignment.center,
-              //     mainAxisAlignment: MainAxisAlignment.start,
-              //     children: [
-              //       Text(
-              //         exercise.name.toString(),
-              //         style: Theme.of(context).textTheme.headlineMedium,
-              //         maxLines: 2,
-              //         overflow: TextOverflow.ellipsis,
-              //       ),
-              //       const SizedBox(height: 8.0), // Add vertical spacing
-              //       Text(
-              //         exercise.instructions.toString(),
-              //         style: Theme.of(context).textTheme.bodyMedium,
-              //         maxLines: 3,
-              //         overflow: TextOverflow.ellipsis,
-              //       ),
-              //       const SizedBox(height: 8.0), // Add vertical spacing
-              //       const Row(
-              //         mainAxisAlignment: MainAxisAlignment.center,
-              //         children: [
-              //           Text(
-              //             'More details →',
-              //             style: TextStyle(
-              //               color: Colors.blue,
-              //               fontWeight: FontWeight.bold,
-              //             ),
-              //           ),
-              //         ],
-              //       ),
-              //     ],
-              //   ),
-              // ),
-
             ],
           ),
         ),

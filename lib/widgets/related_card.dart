@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:workout_buddy/model/exercise.dart';
-
 import '../pages/exercise_detail_page.dart';
 
 class RelatedCard extends StatelessWidget {
@@ -22,40 +21,50 @@ class RelatedCard extends StatelessWidget {
         width: 400,
         child: Card(
           elevation: 4,
-          child: ClipRRect(
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.0),
-            child: Stack(
-              fit: StackFit.loose,
-              children: [
-                Image.asset(
-                  "lib/data/${exercise.images!.elementAt(0)}",
-                  fit: BoxFit.cover,
-                  width: MediaQuery.of(context).size.width,
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.width * 0.50,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.black, Colors.transparent],
-                      stops: [0, 0.50],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomCenter,
-                    ),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.asset(
+                "lib/data/${exercise.images!.elementAt(0)}",
+                fit: BoxFit.cover,
+              ),
+              Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.black54, Colors.transparent],
+                    stops: [0.0, 0.7],
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
                   ),
                 ),
-                Positioned(
-                  top: 16.0,
-                  left: 16.0,
-                  child: Text(
-                    exercise.name.toString(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+              ),
+              Positioned(
+                bottom: 16.0,
+                left: 16.0,
+                right: 16.0,
+                child: Text(
+                  exercise.name.toString(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 2.0,
+                        color: Colors.black,
+                        offset: Offset(1.0, 1.0),
+                      ),
+                    ],
                   ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

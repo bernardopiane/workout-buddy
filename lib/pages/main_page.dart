@@ -17,6 +17,8 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Main Page'),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        elevation: 2,
       ),
       body: SafeArea(
         child: Consumer<ExerciseList>(
@@ -24,11 +26,19 @@ class _MainPageState extends State<MainPage> {
             Set<Exercise> exercises = exerciseList.getAllExercises();
             return exercises.isEmpty
                 ? const Center(child: Text('No exercises found'))
-                : ListView.builder(
+                : GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 300,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      // childAspectRatio: 0.75,
+                    ),
                     itemCount: exercises.length,
                     itemBuilder: (context, index) {
                       return ExerciseCard(exercise: exercises.elementAt(index));
                     },
+                    padding: const EdgeInsets.all(16.0),
                   );
           },
         ),
