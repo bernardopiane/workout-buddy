@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:workout_buddy/global.dart';
 import 'package:workout_buddy/widgets/exercise_card.dart';
 import '../model/exercise.dart';
 import '../model/exercise_list.dart';
@@ -12,6 +13,9 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  String? selectedLevel;
+  String? selectedPrimaryMuscle;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,11 +23,62 @@ class _MainPageState extends State<MainPage> {
         title: const Text('Main Page'),
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 2,
+        actions: [
+          DropdownButton<String>(
+            value: selectedLevel,
+            hint: const Text("Select Level"),
+            onChanged: (String? newValue) {
+              setState(() {
+                selectedLevel = newValue;
+              });
+            },
+            items:
+                difficultyLevels.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value.toLowerCase(),
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+          const SizedBox(width: 16.0),
+          DropdownButton<String>(
+            value: selectedPrimaryMuscle,
+            hint: const Text("Select Muscle"),
+            onChanged: (String? newValue) {
+              setState(() {
+                selectedPrimaryMuscle = newValue;
+              });
+            },
+            items: primaryMuscles.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value.toLowerCase(),
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+          const SizedBox(width: 16.0),
+        ],
       ),
       body: SafeArea(
         child: Consumer<ExerciseList>(
           builder: (context, exerciseList, child) {
             Set<Exercise> exercises = exerciseList.getAllExercises();
+
+            // Apply filters
+            if (selectedLevel != null) {
+              exercises = exercises
+                  .where((exercise) => exercise.level == selectedLevel)
+                  .toSet();
+            }
+
+            if (selectedPrimaryMuscle != null) {
+              exercises = exercises
+                  .where((exercise) =>
+                      exercise.primaryMuscles?.elementAt(0) ==
+                      selectedPrimaryMuscle)
+                  .toSet();
+            }
+
             return exercises.isEmpty
                 ? const Center(child: Text('No exercises found'))
                 : GridView.builder(
@@ -32,7 +87,6 @@ class _MainPageState extends State<MainPage> {
                       maxCrossAxisExtent: 300,
                       mainAxisSpacing: 16,
                       crossAxisSpacing: 16,
-                      // childAspectRatio: 0.75,
                     ),
                     itemCount: exercises.length,
                     itemBuilder: (context, index) {
