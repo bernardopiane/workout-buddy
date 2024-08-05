@@ -17,13 +17,14 @@ class _ExerciseImageDisplayState extends State<ExerciseImageDisplay> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     lastPosition = widget.exercise.images!.length;
   }
 
   @override
   Widget build(BuildContext context) {
+    _precacheImages();
+
     return GestureDetector(
       onTap: _goToNextImage,
       child: ClipRRect(
@@ -67,6 +68,12 @@ class _ExerciseImageDisplayState extends State<ExerciseImageDisplay> {
       setState(() {
         currentPosition++;
       });
+    }
+  }
+
+  void _precacheImages() {
+    for (var image in widget.exercise.images!) {
+      precacheImage(AssetImage("lib/data/$image"), context);
     }
   }
 }
