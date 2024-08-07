@@ -13,12 +13,11 @@ class ExerciseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 4, // Add elevation for a more Material-like appearance
+      elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),
       child: InkWell(
-        // Add InkWell for ink splash effect on tap (if needed)
         borderRadius: BorderRadius.circular(16.0),
         onTap: () {
           Navigator.push(
@@ -26,21 +25,24 @@ class ExerciseCard extends StatelessWidget {
             MaterialPageRoute(
                 builder: (context) => ExerciseDetail(exercise: exercise)),
           );
-          // Handle tap action if needed
         },
         child: Padding(
           padding: const EdgeInsets.all(12.0), // Adjust padding as needed
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildExerciseImage(),
               const SizedBox(width: 12.0),
-              Text(
-                exercise.name.toString(),
-                style: Theme.of(context).textTheme.headlineMedium,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              Flexible(
+                child: Text(
+                  exercise.name.toString(),
+                  style: Theme.of(context).textTheme.headlineMedium,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              const Expanded(
+              const Flexible(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.end,
