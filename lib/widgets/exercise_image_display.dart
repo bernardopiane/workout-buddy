@@ -53,6 +53,18 @@ class _ExerciseImageDisplayState extends State<ExerciseImageDisplay> {
               left: 16.0,
               child: ExerciseLevel(level: widget.exercise.level!),
             ),
+            // If widget.exercise.images!.length > 1, add a touch app icon
+            widget.exercise.images!.length > 1
+                ? Positioned(
+                    bottom: 10,
+                    right: 10,
+                    child: Icon(
+                      Icons.touch_app,
+                      color: Colors.white.withOpacity(0.2), // Subtle icon color
+                      size: 30.0, // Subtle icon size
+                    ),
+                  )
+                : const SizedBox(),
           ],
         ),
       ),
