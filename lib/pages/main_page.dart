@@ -15,6 +15,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   String? selectedLevel;
   String? selectedPrimaryMuscle;
+  String? selectedCategory;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +25,7 @@ class _MainPageState extends State<MainPage> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 2,
         actions: [
+          // TODO Add ability to deselect filters
           DropdownButton<String>(
             value: selectedLevel,
             hint: const Text("Select Level"),
@@ -57,6 +59,23 @@ class _MainPageState extends State<MainPage> {
             }).toList(),
           ),
           const SizedBox(width: 16.0),
+
+          DropdownButton<String>(
+            value: selectedPrimaryMuscle,
+            hint: const Text("Select Category"),
+            onChanged: (String? newValue) {
+              setState(() {
+                selectedCategory = newValue;
+              });
+            },
+            items: categories.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value.toLowerCase(),
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+          const SizedBox(width: 16.0),
         ],
       ),
       body: SafeArea(
@@ -74,8 +93,13 @@ class _MainPageState extends State<MainPage> {
             if (selectedPrimaryMuscle != null) {
               exercises = exercises
                   .where((exercise) =>
-                      exercise.primaryMuscles?.elementAt(0) ==
-                      selectedPrimaryMuscle)
+                      exercise.primaryMuscles?.first == selectedPrimaryMuscle)
+                  .toSet();
+            }
+
+            if (selectedCategory != null) {
+              exercises = exercises
+                  .where((exercise) => exercise.category == selectedCategory)
                   .toSet();
             }
 

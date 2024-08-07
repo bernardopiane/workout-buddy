@@ -1,3 +1,4 @@
+// Start of Filters
 Set<String> primaryMuscles = <String>{
   "Abdominals",
   "Hamstrings",
@@ -20,3 +21,16 @@ Set<String> primaryMuscles = <String>{
 };
 
 Set<String> difficultyLevels = <String>{"Beginner", "Intermediate", "Expert"};
+
+Set<String> categories = <String>{
+  "strength",
+  "stretching",
+  "plyometrics",
+  "strongman",
+  "powerlifting",
+  "cardio",
+  "olympic",
+  "weightlifting"
+};
+
+// End of Filters
