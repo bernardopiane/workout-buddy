@@ -42,87 +42,90 @@ class ExerciseDetail extends StatelessWidget {
               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start, // Aligns the content at the top
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Primary Muscles:',
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
-                    ),
-                    Wrap(
-                      children: exercise.primaryMuscles
-                              ?.map(
-                                (muscle) => Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: Chip(
-                                    label: Text(muscle.toUpperCase()),
-                                    backgroundColor: Theme.of(context)
-                                        .chipTheme
-                                        .backgroundColor,
-                                  ),
-                                ),
-                              )
-                              .toList() ??
-                          [],
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 12.0),
-                // If exercise.secondaryMuscles is not null, display it
-                if (exercise.secondaryMuscles != null &&
-                    exercise.secondaryMuscles!.isNotEmpty)
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                Expanded(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Secondary Muscles:',
+                        'Primary Muscles:',
                         style: TextStyle(
                             fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       Wrap(
-                        children: exercise.secondaryMuscles
-                                ?.map(
-                                  (muscle) => Padding(
-                                    padding: const EdgeInsets.only(right: 8.0),
-                                    child: Chip(
-                                      label: Text(muscle.toUpperCase()),
-                                      backgroundColor: Theme.of(context)
-                                          .chipTheme
-                                          .backgroundColor,
-                                    ),
-                                  ),
-                                )
-                                .toList() ??
+                        children: exercise.primaryMuscles
+                            ?.map(
+                              (muscle) => Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Chip(
+                              label: Text(muscle.toUpperCase()),
+                              backgroundColor: Theme.of(context)
+                                  .chipTheme
+                                  .backgroundColor,
+                            ),
+                          ),
+                        )
+                            .toList() ??
                             [],
                       ),
                     ],
                   ),
+                ),
+                const SizedBox(width: 12.0),
+                if (exercise.secondaryMuscles != null &&
+                    exercise.secondaryMuscles!.isNotEmpty)
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Secondary Muscles:',
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.bold),
+                        ),
+                        Wrap(
+                          children: exercise.secondaryMuscles
+                              ?.map(
+                                (muscle) => Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Chip(
+                                label: Text(muscle.toUpperCase()),
+                                backgroundColor: Theme.of(context)
+                                    .chipTheme
+                                    .backgroundColor,
+                              ),
+                            ),
+                          )
+                              .toList() ??
+                              [],
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
+            const SizedBox(height: 16.0), // Added spacing between sections
             Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Category:",
-                    style:
-                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                const Text(
+                  "Category:",
+                  style: TextStyle(
+                      fontSize: 18.0, fontWeight: FontWeight.bold),
+                ),
                 ExerciseCategory(exercise: exercise),
               ],
             ),
-            // If exercise.equipment is not null, display it
             if (exercise.equipment != null && exercise.equipment!.isNotEmpty)
               Column(
-                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Equipment:",
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold)),
+                  const Text(
+                    "Equipment:",
+                    style: TextStyle(
+                        fontSize: 18.0, fontWeight: FontWeight.bold),
+                  ),
                   Text(
                     exercise.equipment ?? '',
                   ),
@@ -131,17 +134,17 @@ class ExerciseDetail extends StatelessWidget {
             const SizedBox(height: 10),
             Wrap(
               children: exercise.instructions
-                      ?.map((muscle) => Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(
-                              muscle,
-                              style: const TextStyle(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                          ))
-                      .toList() ??
+                  ?.map((instruction) => Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Text(
+                  instruction,
+                  style: const TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              ))
+                  .toList() ??
                   [],
             ),
             const SizedBox(height: 10),
@@ -149,7 +152,7 @@ class ExerciseDetail extends StatelessWidget {
               width: double.infinity,
               height: 200,
               child: RelatedExercises(exercise: exercise),
-            )
+            ),
           ],
         ),
       ),
