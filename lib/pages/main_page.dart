@@ -4,6 +4,7 @@ import 'package:workout_buddy/global.dart';
 import 'package:workout_buddy/widgets/exercise_card.dart';
 import '../model/exercise.dart';
 import '../model/exercise_list.dart';
+import '../widgets/filter_dropdown.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -25,57 +26,38 @@ class _MainPageState extends State<MainPage> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 2,
         actions: [
-          // TODO Add ability to deselect filters
-          DropdownButton<String>(
+          FilterDropdown(
+            hintText: 'Select Level',
             value: selectedLevel,
-            hint: const Text("Select Level"),
+            options: difficultyLevels,
             onChanged: (String? newValue) {
               setState(() {
                 selectedLevel = newValue;
               });
             },
-            items:
-                difficultyLevels.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value.toLowerCase(),
-                child: Text(value),
-              );
-            }).toList(),
           ),
           const SizedBox(width: 16.0),
-          DropdownButton<String>(
+          FilterDropdown(
+            hintText: 'Select Muscle',
             value: selectedPrimaryMuscle,
-            hint: const Text("Select Muscle"),
+            options: primaryMuscles,
             onChanged: (String? newValue) {
               setState(() {
                 selectedPrimaryMuscle = newValue;
               });
             },
-            items: primaryMuscles.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value.toLowerCase(),
-                child: Text(value),
-              );
-            }).toList(),
           ),
           const SizedBox(width: 16.0),
-
-          DropdownButton<String>(
-            value: selectedPrimaryMuscle,
-            hint: const Text("Select Category"),
+          FilterDropdown(
+            hintText: 'Select Category',
+            value: selectedCategory,
+            options: categories,
             onChanged: (String? newValue) {
               setState(() {
                 selectedCategory = newValue;
               });
             },
-            items: categories.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value.toLowerCase(),
-                child: Text(value),
-              );
-            }).toList(),
           ),
-          const SizedBox(width: 16.0),
         ],
       ),
       body: SafeArea(
