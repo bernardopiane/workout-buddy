@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_buddy/global.dart';
+import 'package:workout_buddy/pages/favorites_page.dart';
 import 'package:workout_buddy/widgets/exercise_card.dart';
 import '../model/exercise.dart';
 import '../model/exercise_list.dart';
@@ -17,6 +18,8 @@ class _MainPageState extends State<MainPage> {
   String? selectedLevel;
   String? selectedPrimaryMuscle;
   String? selectedCategory;
+
+  int selectedPage = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -61,48 +64,75 @@ class _MainPageState extends State<MainPage> {
         ],
       ),
       body: SafeArea(
-        child: Consumer<ExerciseList>(
-          builder: (context, exerciseList, child) {
-            Set<Exercise> exercises = exerciseList.getAllExercises();
-
-            // Apply filters
-            if (selectedLevel != null) {
-              exercises = exercises
-                  .where((exercise) => exercise.level == selectedLevel)
-                  .toSet();
-            }
-
-            if (selectedPrimaryMuscle != null) {
-              exercises = exercises
-                  .where((exercise) =>
-                      exercise.primaryMuscles?.first == selectedPrimaryMuscle)
-                  .toSet();
-            }
-
-            if (selectedCategory != null) {
-              exercises = exercises
-                  .where((exercise) => exercise.category == selectedCategory)
-                  .toSet();
-            }
-
-            return exercises.isEmpty
-                ? const Center(child: Text('No exercises found'))
-                : GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 300,
-                      mainAxisSpacing: 16,
-                      crossAxisSpacing: 16,
-                    ),
-                    itemCount: exercises.length,
-                    itemBuilder: (context, index) {
-                      return ExerciseCard(exercise: exercises.elementAt(index));
-                    },
-                    padding: const EdgeInsets.all(16.0),
-                  );
-          },
+        child: IndexedStack(
+          index: selectedPage,
+          children: [
+            _buildWorkoutPage(),
+            const FavoritesPage(),
+          ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: selectedPage,
+        onTap: (int index) {
+          setState(() {
+            selectedPage = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.work_outline),
+            label: 'Workout',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favorites',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWorkoutPage() {
+    return Consumer<ExerciseList>(
+      builder: (context, exerciseList, child) {
+        Set<Exercise> exercises = exerciseList.getAllExercises();
+
+        // Apply filters
+        if (selectedLevel != null) {
+          exercises = exercises
+              .where((exercise) => exercise.level == selectedLevel)
+              .toSet();
+        }
+
+        if (selectedPrimaryMuscle != null) {
+          exercises = exercises
+              .where((exercise) =>
+                  exercise.primaryMuscles?.first == selectedPrimaryMuscle)
+              .toSet();
+        }
+
+        if (selectedCategory != null) {
+          exercises = exercises
+              .where((exercise) => exercise.category == selectedCategory)
+              .toSet();
+        }
+
+        return exercises.isEmpty
+            ? const Center(child: Text('No exercises found'))
+            : GridView.builder(
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 300,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                ),
+                itemCount: exercises.length,
+                itemBuilder: (context, index) {
+                  return ExerciseCard(exercise: exercises.elementAt(index));
+                },
+                padding: const EdgeInsets.all(16.0),
+              );
+      },
     );
   }
 }

@@ -25,6 +25,7 @@ class ExerciseCategory extends StatelessWidget {
     );
   }
 
+  // TODO get correct icons
   static Icon _getIcon(String? category) {
     switch (category?.toLowerCase()) {
       case 'strength':
