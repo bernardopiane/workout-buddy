@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:workout_buddy/model/exercise.dart';
 import 'package:workout_buddy/model/favorites.dart';
 
+import '../widgets/equipment.dart';
 import '../widgets/exercise_category.dart';
 import '../widgets/exercise_image_display.dart';
 import '../widgets/related_exercises.dart';
@@ -18,9 +19,12 @@ class ExerciseDetail extends StatelessWidget {
       floatingActionButton: Consumer<Favorites>(
         builder: (context, favoritesNotifier, child) {
           return FloatingActionButton(
-            child: Icon(favoritesNotifier.isFavorite(exercise)
-                ? Icons.favorite
-                : Icons.favorite_border),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            child: Icon(
+              favoritesNotifier.isFavorite(exercise)
+                  ? Icons.favorite
+                  : Icons.favorite_border,
+            ),
             onPressed: () {
               favoritesNotifier.toggleFavorite(exercise);
             },
@@ -37,125 +41,142 @@ class ExerciseDetail extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ExerciseImageDisplay(exercise: exercise),
-            const Text(
-              'Muscles worked on:',
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-            ),
+            const SizedBox(height: 16.0),
+            _buildSectionTitle(context, 'Muscles worked on:'),
+            const SizedBox(height: 8.0),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start, // Aligns the content at the top
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Primary Muscles:',
-                        style: TextStyle(
-                            fontSize: 18.0, fontWeight: FontWeight.bold),
-                      ),
-                      Wrap(
-                        children: exercise.primaryMuscles
-                            ?.map(
-                              (muscle) => Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Chip(
-                              label: Text(muscle.toUpperCase()),
-                              backgroundColor: Theme.of(context)
-                                  .chipTheme
-                                  .backgroundColor,
-                            ),
-                          ),
-                        )
-                            .toList() ??
-                            [],
-                      ),
-                    ],
-                  ),
-                ),
+                _buildMuscleColumn(
+                    context, 'Primary Muscles:', exercise.primaryMuscles),
                 const SizedBox(width: 12.0),
                 if (exercise.secondaryMuscles != null &&
                     exercise.secondaryMuscles!.isNotEmpty)
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Secondary Muscles:',
-                          style: TextStyle(
-                              fontSize: 18.0, fontWeight: FontWeight.bold),
-                        ),
-                        Wrap(
-                          children: exercise.secondaryMuscles
-                              ?.map(
-                                (muscle) => Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: Chip(
-                                label: Text(muscle.toUpperCase()),
-                                backgroundColor: Theme.of(context)
-                                    .chipTheme
-                                    .backgroundColor,
-                              ),
-                            ),
-                          )
-                              .toList() ??
-                              [],
-                        ),
-                      ],
-                    ),
-                  ),
+                  _buildMuscleColumn(
+                      context, 'Secondary Muscles:', exercise.secondaryMuscles),
               ],
             ),
-            const SizedBox(height: 16.0), // Added spacing between sections
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Category:",
-                  style: TextStyle(
-                      fontSize: 18.0, fontWeight: FontWeight.bold),
-                ),
-                ExerciseCategory(exercise: exercise),
-              ],
-            ),
-            if (exercise.equipment != null && exercise.equipment!.isNotEmpty)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Equipment:",
-                    style: TextStyle(
-                        fontSize: 18.0, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    exercise.equipment ?? '',
-                  ),
-                ],
-              ),
-            const SizedBox(height: 10),
-            Wrap(
-              children: exercise.instructions
-                  ?.map((instruction) => Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Text(
-                  instruction,
-                  style: const TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-              ))
-                  .toList() ??
-                  [],
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              width: double.infinity,
-              height: 200,
-              child: RelatedExercises(exercise: exercise),
-            ),
+            const Divider(height: 32.0),
+            _buildCategoryAndEquipmentSection(context),
+            const Divider(height: 32.0),
+            _buildInstructionsSection(context),
+            const Divider(height: 32.0),
+            _buildRelatedExercisesSection(context),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildSectionTitle(BuildContext context, String title) {
+    return Text(
+      title,
+      style: Theme.of(context).textTheme.headlineSmall,
+    );
+  }
+
+  Widget _buildMuscleColumn(
+      BuildContext context, String title, List<String>? muscles) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          Wrap(
+            children: muscles
+                    ?.map(
+                      (muscle) => Padding(
+                        padding: const EdgeInsets.only(right: 8.0, top: 4.0),
+                        child: Chip(
+                          label: Text(muscle.toUpperCase()),
+                          backgroundColor:
+                              Theme.of(context).chipTheme.backgroundColor,
+                        ),
+                      ),
+                    )
+                    .toList() ??
+                [],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryAndEquipmentSection(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Category:",
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 8.0),
+            ExerciseCategory(exercise: exercise),
+          ],
+        ),
+        if (exercise.equipment != null && exercise.equipment!.isNotEmpty)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Equipment:",
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 8.0),
+              Equipment(exercise: exercise),
+            ],
+          ),
+      ],
+    );
+  }
+
+  Widget _buildInstructionsSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionTitle(context, 'Instructions:'),
+        const SizedBox(height: 8.0),
+        Wrap(
+          children: exercise.instructions
+                  ?.map((instruction) => Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text(
+                          instruction,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ))
+                  .toList() ??
+              [],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRelatedExercisesSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionTitle(context, 'Related Exercises:'),
+        const SizedBox(height: 8.0),
+        SizedBox(
+          width: double.infinity,
+          height: 200,
+          child: RelatedExercises(exercise: exercise),
+        ),
+      ],
     );
   }
 }
