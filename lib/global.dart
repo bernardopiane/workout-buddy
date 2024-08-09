@@ -33,4 +33,19 @@ Set<String> categories = <String>{
   "weightlifting"
 };
 
+Set<String> equipment = <String>{
+  "body only",
+  "machine",
+  "other",
+  "foam roll",
+  "kettlebells",
+  "dumbbell",
+  "cable",
+  "barbell",
+  "bands",
+  "medicine ball",
+  "exercise",
+  "e-z curl bar"
+};
+
 // End of Filters
