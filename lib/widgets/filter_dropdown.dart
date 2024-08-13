@@ -6,6 +6,7 @@ class FilterDropdown extends StatelessWidget {
   final String? value;
   final Set<String> options;
   final ValueChanged<String?> onChanged;
+  final bool showAllOption;
 
   const FilterDropdown({
     super.key,
@@ -13,6 +14,7 @@ class FilterDropdown extends StatelessWidget {
     required this.value,
     required this.options,
     required this.onChanged,
+    this.showAllOption = true,
   });
 
   @override
@@ -23,10 +25,11 @@ class FilterDropdown extends StatelessWidget {
       hint: Text(hintText),
       onChanged: onChanged,
       items: [
-        DropdownMenuItem<String>(
-          value: null,
-          child: Text('All ${hintText.replaceAll('Select ', '')}s'),
-        ),
+        if (showAllOption)
+          DropdownMenuItem<String>(
+            value: null,
+            child: Text('All ${hintText.replaceAll('Select ', '')}s'),
+          ),
         ...options.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value.toLowerCase(),
