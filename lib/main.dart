@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workout_buddy/model/favorites.dart';
+import 'package:workout_buddy/model/workout_plan.dart';
 import 'package:workout_buddy/pages/main_page.dart';
 import 'package:workout_buddy/theme_data.dart';
 
@@ -18,7 +19,8 @@ Future<void> main() async {
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => Favorites()),
-      ChangeNotifierProvider(create: (_) => ExerciseList())
+      ChangeNotifierProvider(create: (_) => ExerciseList()),
+      ChangeNotifierProvider(create: (_) => WorkoutPlan()),
     ], child: const MyApp()),
   );
 }

@@ -6,8 +6,10 @@ import '../model/exercise.dart';
 import '../model/exercise_list.dart';
 
 class WorkoutSelector extends StatefulWidget {
-  const WorkoutSelector({super.key, required this.workoutDay});
+  const WorkoutSelector({super.key, required this.workoutDay, required this.addWorkout, required this.removeWorkout});
   final WorkoutDay workoutDay;
+  final Function(Exercise exercise) addWorkout;
+  final Function(Exercise exercise) removeWorkout;
 
   @override
   State<WorkoutSelector> createState() => _WorkoutSelectorState();
@@ -34,24 +36,26 @@ class _WorkoutSelectorState extends State<WorkoutSelector> {
 
                         // Check if the exercise is already in the workout plan
                         for (Exercise exercise in widget.workoutDay.workouts) {
-                          if (exercise.name == exercises.elementAt(index).name) {
+                          if (exercise.name ==
+                              exercises.elementAt(index).name) {
                             isSelected = true;
                           }
                         }
 
                         return CheckboxListTile(
-                          title: Text(exercises.elementAt(index).name.toString()),
+                          title:
+                              Text(exercises.elementAt(index).name.toString()),
                           value: isSelected,
                           onChanged: (bool? value) {
                             // If the exercise is selected, add it to the workout plan
                             if (value == true) {
-                              widget.workoutDay.addExercise(exercises.elementAt(index));
+                              widget.addWorkout(exercises.elementAt(index));
                             }
                             // If the exercise is deselected, remove it from the workout plan
                             else {
-                              widget.workoutDay.removeExercise(exercises.elementAt(index));
+                              widget.removeWorkout(exercises.elementAt(index));
                             }
-                          //   Update the state of the checkbox
+                            //   Update the state of the checkbox
                             setState(() {
                               isSelected = value!;
                             });
@@ -60,12 +64,20 @@ class _WorkoutSelectorState extends State<WorkoutSelector> {
                       },
                     ),
                   ),
+                  // Confirm selection
                   ElevatedButton(
                     onPressed: () {
-                    //   Close the bottom sheet
+                      //   Close the bottom sheet
                       Navigator.pop(context);
                     },
                     child: const Text('Done'),
+                  ),
+                  //   Cancel selection
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cancel'),
                   ),
                 ],
               );
