@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:workout_buddy/global.dart';
 import 'package:workout_buddy/model/exercise.dart';
 import 'package:workout_buddy/model/workout_day.dart';
 import 'package:workout_buddy/widgets/workout_selector.dart';
+import '../model/workout_plan.dart';
 import '../widgets/filter_dropdown.dart';
 
 class WorkoutPlannerPage extends StatefulWidget {
@@ -113,6 +115,31 @@ class _WorkoutPlannerPageState extends State<WorkoutPlannerPage> {
                           );
                         },
                       ),
+                      const SizedBox(height: 16.0),
+                      Consumer<WorkoutPlan>(
+                        builder: (context, workoutPlan, child) {
+                          return Row(
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    _formKey.currentState!.save();
+                                    workoutPlan.addWorkoutDay(workoutDay);
+                                  }
+                                },
+                                child: const Text('Save Workout Day'),
+                              ),
+                            //   Debug button to print workout plan
+                              ElevatedButton(
+                                onPressed: () {
+                                  debugPrint(workoutPlan.toString());
+                                },
+                                child: const Text('Print Workout Plan'),
+                              ),
+                            ],
+                          );
+                        },
+                      )
                     ],
                   ),
                 ),

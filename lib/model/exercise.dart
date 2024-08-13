@@ -60,4 +60,9 @@ class Exercise {
     data['id'] = id;
     return data;
   }
+
+  @override
+  String toString() {
+    return "Exercise - name: $name - id: $id\n";
+  }
 }
