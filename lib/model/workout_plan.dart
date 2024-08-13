@@ -4,8 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workout_buddy/model/workout_day.dart';
 
 class WorkoutPlan extends ChangeNotifier {
-  final String planName;
-  final List<WorkoutDay> workoutDays;
+  String planName;
+  List<WorkoutDay> workoutDays;
 
   WorkoutPlan()
       : planName = 'Untitled workout plan',
@@ -46,19 +46,21 @@ class WorkoutPlan extends ChangeNotifier {
   }
 
   // Load the workout plan from SharedPreferences
-  static Future<WorkoutPlan> loadFromSharedPreferences() async {
+  Future<void> loadFromSharedPreferences() async {
     final prefs = await SharedPreferences.getInstance();
     final workoutPlanJson = prefs.getString('workout_plan');
+    debugPrint("Loaded workout plan from SharedPreferences: $workoutPlanJson");
 
     if (workoutPlanJson != null) {
       final Map<String, dynamic> decodedPlan = jsonDecode(workoutPlanJson);
-      final String planName = decodedPlan['planName'];
+      final String loadedPlanName = decodedPlan['planName'];
       final List<dynamic> daysJson = decodedPlan['days'];
       final List<WorkoutDay> loadedDays =
           daysJson.map((dayJson) => WorkoutDay.fromJson(dayJson)).toList();
-      return WorkoutPlan.filled(planName, loadedDays);
-    } else {
-      return WorkoutPlan(); // Return an empty plan if nothing is saved
+      planName = loadedPlanName;
+      workoutDays = loadedDays;
+      notifyListeners();
+      debugPrint("Loaded workout plan from SharedPreferences");
     }
   }
 
