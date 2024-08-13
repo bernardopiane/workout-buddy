@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_buddy/global.dart';
 import 'package:workout_buddy/pages/favorites_page.dart';
+import 'package:workout_buddy/pages/workout_planner_page.dart';
 import 'package:workout_buddy/widgets/exercise_card.dart';
 import '../model/exercise.dart';
 import '../model/exercise_list.dart';
@@ -69,6 +70,7 @@ class _MainPageState extends State<MainPage> {
           children: [
             _buildWorkoutPage(),
             const FavoritesPage(),
+            const WorkoutPlannerPage(),
           ],
         ),
       ),
@@ -87,6 +89,10 @@ class _MainPageState extends State<MainPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
             label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.access_alarm),
+            label: 'Workout Planner',
           ),
         ],
       ),
