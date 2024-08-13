@@ -49,3 +49,13 @@ Set<String> equipment = <String>{
 };
 
 // End of Filters
+
+Set<String> dayOfWeek = <String>{
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday"
+};
