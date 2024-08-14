@@ -21,6 +21,7 @@ class Equipment extends StatelessWidget {
     );
   }
 
+   // TODO get images for equipment
   Widget _getImageWidget(String? equipment) {
     // Map of equipment types to their corresponding asset paths
     const equipmentImages = {

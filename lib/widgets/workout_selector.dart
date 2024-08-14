@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_buddy/model/workout_day.dart';
-
-import '../model/exercise.dart';
+ import '../model/exercise.dart';
 import '../model/exercise_list.dart';
 
 class WorkoutSelector extends StatefulWidget {
-  const WorkoutSelector({super.key, required this.workoutDay, required this.addWorkout, required this.removeWorkout});
+  const WorkoutSelector({
+    super.key,
+    required this.workoutDay,
+    required this.addWorkout,
+    required this.removeWorkout,
+  });
+
   final WorkoutDay workoutDay;
   final Function(Exercise exercise) addWorkout;
   final Function(Exercise exercise) removeWorkout;
@@ -16,71 +21,71 @@ class WorkoutSelector extends StatefulWidget {
 }
 
 class _WorkoutSelectorState extends State<WorkoutSelector> {
+  String _searchQuery = '';
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ExerciseList>(
       builder: (context, exerciseList, child) {
         Set<Exercise> exercises = exerciseList.getAllExercises();
 
-        return exercises.isEmpty
-            ? const Center(child: Text('No exercises found'))
-            : Column(
-                children: [
-                  const Text('Select Workouts'),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: exercises.length,
-                      itemBuilder: (context, index) {
-                        // Initialize is selected to false
-                        bool isSelected = false;
+        // Filter exercises based on the search query
+        Set<Exercise> filteredExercises = exercises.where((exercise) {
+          return exercise.name!
+              .toLowerCase()
+              .contains(_searchQuery.toLowerCase());
+        }).toSet();
 
-                        // Check if the exercise is already in the workout plan
-                        for (Exercise exercise in widget.workoutDay.workouts) {
-                          if (exercise.name ==
-                              exercises.elementAt(index).name) {
-                            isSelected = true;
-                          }
-                        }
+        return Column(
+          children: [
+            const Text(
+              'Select Workouts',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Search Exercises',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.search),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value;
+                  });
+                },
+              ),
+            ),
+            filteredExercises.isEmpty
+                ? const Center(child: Text('No exercises found'))
+                : Expanded(
+                    child: ListView.builder(
+                      itemCount: filteredExercises.length,
+                      itemBuilder: (context, index) {
+                        Exercise exercise =
+                            filteredExercises.elementAt(index);
+
+                        bool isSelected = widget.workoutDay.workouts
+                            .any((e) => e.name == exercise.name);
 
                         return CheckboxListTile(
-                          title:
-                              Text(exercises.elementAt(index).name.toString()),
+                          title: Text(exercise.name!),
                           value: isSelected,
                           onChanged: (bool? value) {
-                            // If the exercise is selected, add it to the workout plan
                             if (value == true) {
-                              widget.addWorkout(exercises.elementAt(index));
+                              widget.addWorkout(exercise);
+                            } else {
+                              widget.removeWorkout(exercise);
                             }
-                            // If the exercise is deselected, remove it from the workout plan
-                            else {
-                              widget.removeWorkout(exercises.elementAt(index));
-                            }
-                            //   Update the state of the checkbox
-                            setState(() {
-                              isSelected = value!;
-                            });
+                            setState(() {});
                           },
                         );
                       },
                     ),
                   ),
-                  // Confirm selection
-                  ElevatedButton(
-                    onPressed: () {
-                      //   Close the bottom sheet
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Done'),
-                  ),
-                  //   Cancel selection
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Cancel'),
-                  ),
-                ],
-              );
+          ],
+        );
       },
     );
   }

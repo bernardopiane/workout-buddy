@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:workout_buddy/global.dart';
 import 'package:workout_buddy/model/exercise.dart';
 import 'package:workout_buddy/model/workout_day.dart';
 import 'package:workout_buddy/widgets/workout_selector.dart';
-import '../model/workout_plan.dart';
-import '../widgets/filter_dropdown.dart';
 
 class WorkoutPlannerPage extends StatefulWidget {
   const WorkoutPlannerPage({super.key});
@@ -14,136 +11,112 @@ class WorkoutPlannerPage extends StatefulWidget {
   State<WorkoutPlannerPage> createState() => _WorkoutPlannerPageState();
 }
 
-class _WorkoutPlannerPageState extends State<WorkoutPlannerPage> {
+class _WorkoutPlannerPageState extends State<WorkoutPlannerPage>
+    with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   String? selectedDay;
 
   WorkoutDay workoutDay = WorkoutDay(dayName: "", workouts: []);
+
+  List<String> selectedDays = <String>[];
+
+  int _index = 0;
+  TabController? _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: selectedDays.length, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            const Text(
-              'Workout Planner Page',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16.0),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'Workout Day Name',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter a workout day name';
+        child: Stepper(
+          currentStep: _index,
+          onStepCancel: () {
+            if (_index > 0) {
+              setState(() {
+                _index -= 1;
+              });
+            }
+          },
+          onStepContinue: () {
+            if (_index <= 0) {
+              setState(() {
+                _index += 1;
+                _tabController =
+                    TabController(length: selectedDays.length, vsync: this);
+              });
+            }
+          },
+          onStepTapped: (int index) {
+            setState(() {
+              _index = index;
+            });
+          },
+          steps: <Step>[
+            Step(
+              title: const Text('Select Days'),
+              content: Wrap(
+                children: [
+                  ...dayOfWeek.map((e) {
+                    return CheckboxListTile(
+                      title: Text(e),
+                      value: selectedDays.contains(e),
+                      onChanged: (bool? value) {
+                        setState(() {
+                          if (value == true) {
+                            selectedDays.add(e);
+                          } else {
+                            selectedDays.remove(e);
                           }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          workoutDay.dayName = value!;
-                        },
-                      ),
-                      const SizedBox(height: 16.0),
-                      const Text(
-                        'Selectable Days of the Week',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8.0),
-                      FilterDropdown(
-                        hintText: 'Select Day',
-                        showAllOption: false,
-                        value: selectedDay,
-                        options: dayOfWeek,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedDay = newValue;
-                            workoutDay.dayName = newValue!;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 16.0),
-                      ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (context) {
-                                return WorkoutSelector(
-                                  workoutDay: workoutDay,
-                                  addWorkout: _addWorkout,
-                                  removeWorkout: _removeWorkout,
-                                );
-                              },
-                            );
-                          }
-                        },
-                        child: const Text('Select Workouts'),
-                      ),
-                      const SizedBox(height: 16.0),
-                      Text(
-                        'Selected Workouts',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                      const SizedBox(height: 8.0),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: workoutDay.workouts.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(
-                              workoutDay.workouts[index].name!,
-                            ),
-                            trailing: IconButton(
-                              onPressed: () {
-                                _removeWorkout(workoutDay.workouts[index]);
-                              },
-                              icon: const Icon(Icons.delete),
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 16.0),
-                      Consumer<WorkoutPlan>(
-                        builder: (context, workoutPlan, child) {
-                          return Row(
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    _formKey.currentState!.save();
-                                    workoutPlan.addWorkoutDay(workoutDay);
-                                  }
-                                },
-                                child: const Text('Save Workout Day'),
-                              ),
-                            //   Debug button to print workout plan
-                              ElevatedButton(
-                                onPressed: () {
-                                  debugPrint(workoutPlan.toString());
-                                },
-                                child: const Text('Print Workout Plan'),
-                              ),
-                            ],
-                          );
-                        },
-                      )
-                    ],
-                  ),
-                ),
+                          _tabController = TabController(
+                              length: selectedDays.length, vsync: this);
+                        });
+                      },
+                    );
+                  }),
+                ],
               ),
+            ),
+            Step(
+              title: const Text('Select Workouts'),
+              content: selectedDays.isEmpty
+                  ? const Center(child: Text('No days selected'))
+                  : Column(
+                      children: [
+                        TabBar(
+                          controller: _tabController,
+                          isScrollable: true,
+                          tabs: selectedDays
+                              .map((day) => Tab(text: day))
+                              .toList(),
+                        ),
+                        // TODO modify to work with workouts by day
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          child: TabBarView(
+                            controller: _tabController,
+                            children: selectedDays.map((day) {
+                              return WorkoutSelector(
+                                workoutDay: workoutDay,
+                                addWorkout: _addWorkout,
+                                removeWorkout: _removeWorkout,
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ],
+                    ),
             ),
           ],
         ),
