@@ -23,29 +23,28 @@ Set<String> primaryMuscles = <String>{
 Set<String> difficultyLevels = <String>{"Beginner", "Intermediate", "Expert"};
 
 Set<String> categories = <String>{
-  "strength",
-  "stretching",
-  "plyometrics",
-  "strongman",
-  "powerlifting",
-  "cardio",
-  "olympic",
-  "weightlifting"
+  "Strength",
+  "Stretching",
+  "Plyometrics",
+  "Strongman",
+  "Powerlifting",
+  "Cardio",
+  "Olympic Weightlifting",
 };
 
 Set<String> equipment = <String>{
-  "body only",
-  "machine",
-  "other",
-  "foam roll",
-  "kettlebells",
-  "dumbbell",
-  "cable",
-  "barbell",
-  "bands",
-  "medicine ball",
-  "exercise",
-  "e-z curl bar"
+  "Body Only",
+  "Machine",
+  "Other",
+  "FoamRoll",
+  "Kettlebells",
+  "Dumbbell",
+  "Cable",
+  "Barbell",
+  "Bands",
+  "Medicine Ball",
+  "Exercise Ball",
+  "E-Z Curl Bar",
 };
 
 // End of Filters
