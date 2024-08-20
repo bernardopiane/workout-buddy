@@ -13,8 +13,8 @@ class WorkoutSelector extends StatefulWidget {
   });
 
   final WorkoutDay workoutDay;
-  final Function(Exercise exercise) addWorkout;
-  final Function(Exercise exercise) removeWorkout;
+   final Function(WorkoutDay workoutDay, Exercise exercise) addWorkout;
+  final Function(WorkoutDay workoutDay, Exercise exercise) removeWorkout;
 
   @override
   State<WorkoutSelector> createState() => _WorkoutSelectorState();
@@ -74,9 +74,9 @@ class _WorkoutSelectorState extends State<WorkoutSelector> {
                           value: isSelected,
                           onChanged: (bool? value) {
                             if (value == true) {
-                              widget.addWorkout(exercise);
+                              widget.addWorkout(widget.workoutDay, exercise);
                             } else {
-                              widget.removeWorkout(exercise);
+                              widget.removeWorkout(widget.workoutDay, exercise);
                             }
                             setState(() {});
                           },

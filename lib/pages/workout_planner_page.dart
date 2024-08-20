@@ -13,12 +13,11 @@ class WorkoutPlannerPage extends StatefulWidget {
 
 class _WorkoutPlannerPageState extends State<WorkoutPlannerPage>
     with TickerProviderStateMixin {
-  final _formKey = GlobalKey<FormState>();
   String? selectedDay;
 
-  WorkoutDay workoutDay = WorkoutDay(dayName: "", workouts: []);
+  List<WorkoutDay> workoutDays = List.empty(growable: true);
 
-  List<String> selectedDays = <String>[];
+  WorkoutDay workoutDay = WorkoutDay(dayName: "", workouts: []);
 
   int _index = 0;
   TabController? _tabController;
@@ -26,7 +25,7 @@ class _WorkoutPlannerPageState extends State<WorkoutPlannerPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: selectedDays.length, vsync: this);
+    _tabController = TabController(length: workoutDays.length, vsync: this);
   }
 
   @override
@@ -54,7 +53,7 @@ class _WorkoutPlannerPageState extends State<WorkoutPlannerPage>
               setState(() {
                 _index += 1;
                 _tabController =
-                    TabController(length: selectedDays.length, vsync: this);
+                    TabController(length: workoutDays.length, vsync: this);
               });
             }
           },
@@ -71,16 +70,18 @@ class _WorkoutPlannerPageState extends State<WorkoutPlannerPage>
                   ...dayOfWeek.map((e) {
                     return CheckboxListTile(
                       title: Text(e),
-                      value: selectedDays.contains(e),
+                      value: workoutDays.any((element) => element.dayName == e),
                       onChanged: (bool? value) {
                         setState(() {
                           if (value == true) {
-                            selectedDays.add(e);
+                            workoutDays
+                                .add(WorkoutDay(dayName: e, workouts: []));
                           } else {
-                            selectedDays.remove(e);
+                            workoutDays
+                                .removeWhere((element) => element.dayName == e);
                           }
                           _tabController = TabController(
-                              length: selectedDays.length, vsync: this);
+                              length: workoutDays.length, vsync: this);
                         });
                       },
                     );
@@ -90,25 +91,24 @@ class _WorkoutPlannerPageState extends State<WorkoutPlannerPage>
             ),
             Step(
               title: const Text('Select Workouts'),
-              content: selectedDays.isEmpty
+              content: workoutDays.isEmpty
                   ? const Center(child: Text('No days selected'))
                   : Column(
                       children: [
                         TabBar(
                           controller: _tabController,
                           isScrollable: true,
-                          tabs: selectedDays
-                              .map((day) => Tab(text: day))
+                          tabs: workoutDays
+                              .map((day) => Tab(text: day.dayName))
                               .toList(),
                         ),
-                        // TODO modify to work with workouts by day
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.5,
                           child: TabBarView(
                             controller: _tabController,
-                            children: selectedDays.map((day) {
+                            children: workoutDays.map((day) {
                               return WorkoutSelector(
-                                workoutDay: workoutDay,
+                                workoutDay: day,
                                 addWorkout: _addWorkout,
                                 removeWorkout: _removeWorkout,
                               );
@@ -124,17 +124,25 @@ class _WorkoutPlannerPageState extends State<WorkoutPlannerPage>
     );
   }
 
-  void _addWorkout(Exercise exercise) {
+  void _addWorkout(WorkoutDay workoutDay, Exercise exercise) {
     setState(() {
-      workoutDay.workouts.add(exercise);
+      workoutDays
+          .where((element) => element.dayName == workoutDay.dayName)
+          .first
+          .workouts
+          .add(exercise);
     });
-    debugPrint("Added ${exercise.name} to workout day");
+    debugPrint("Added ${exercise.name} to ${workoutDay.dayName}");
   }
 
-  void _removeWorkout(Exercise exercise) {
+  void _removeWorkout(WorkoutDay workoutDay, Exercise exercise) {
     setState(() {
-      workoutDay.workouts.remove(exercise);
+      workoutDays
+          .where((element) => element.dayName == workoutDay.dayName)
+          .first
+          .workouts
+          .remove(exercise);
     });
-    debugPrint("Removed ${exercise.name} from workout day");
+    debugPrint("Removed ${exercise.name} from ${workoutDay.dayName}");
   }
 }
