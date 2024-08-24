@@ -116,18 +116,23 @@ class _WorkoutPlannerPageState extends State<WorkoutPlannerPage>
                       onChanged: (bool? value) {
                         setState(() {
                           if (value == true) {
-                            workoutDays.add(WorkoutDay(dayName: e, workouts: []));
+                            workoutDays
+                                .add(WorkoutDay(dayName: e, workouts: []));
                             // Reorder WorkoutDays to match the order of dayOfWeek
                             List<String> dayOrder = dayOfWeek.toList();
                             workoutDays.sort((a, b) {
-                              return dayOrder.indexOf(a.dayName).compareTo(dayOrder.indexOf(b.dayName));
+                              return dayOrder
+                                  .indexOf(a.dayName)
+                                  .compareTo(dayOrder.indexOf(b.dayName));
                             });
                           } else {
-                            workoutDays.removeWhere((element) => element.dayName == e);
+                            workoutDays
+                                .removeWhere((element) => element.dayName == e);
                           }
 
                           // Update the TabController to reflect the current number of tabs
-                          _tabController = TabController(length: workoutDays.length, vsync: this);
+                          _tabController = TabController(
+                              length: workoutDays.length, vsync: this);
                         });
                       },
                     );
