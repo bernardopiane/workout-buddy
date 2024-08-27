@@ -1,40 +1,39 @@
 // Start of Filters
 Set<String> primaryMuscles = <String>{
   "Abdominals",
-  "Hamstrings",
+  "Abductors",
   "Adductors",
-  "Quadriceps",
   "Biceps",
-  "Shoulders",
-  "Chest",
-  "Middle Back",
   "Calves",
-  "Glutes",
-  "Lower Back",
-  "Lats",
-  "Triceps",
-  "Traps",
+  "Chest",
   "Forearms",
+  "Glutes",
+  "Hamstrings",
+  "Lats",
+  "Lower Back",
+  "Middle Back",
   "Neck",
-  "Abductors"
+  "Quadriceps",
+  "Shoulders",
+  "Traps",
+  "Tricep"
 };
 
 Set<String> difficultyLevels = <String>{"Beginner", "Intermediate", "Expert"};
 
 Set<String> categories = <String>{
-  "Strength",
-  "Stretching",
-  "Plyometrics",
-  "Strongman",
-  "Powerlifting",
   "Cardio",
   "Olympic Weightlifting",
+  "Plyometrics",
+  "Powerlifting",
+  "Strength",
+  "Strongman",
+  "Stretching"
 };
 
 Set<String> equipment = <String>{
   "Body Only",
   "Machine",
-  "Other",
   "FoamRoll",
   "Kettlebells",
   "Dumbbell",
@@ -44,6 +43,7 @@ Set<String> equipment = <String>{
   "Medicine Ball",
   "Exercise Ball",
   "E-Z Curl Bar",
+  "Other",
 };
 
 // End of Filters
