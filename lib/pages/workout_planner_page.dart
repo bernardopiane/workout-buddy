@@ -125,7 +125,7 @@ class _WorkoutPlannerPageState extends State<WorkoutPlannerPage>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: workoutDays
           .map((day) => Text(
-          "${day.dayName}: ${getPrimaryMuscles(day).map((muscle) => capitalize(muscle)).join(', ')}"))
+              "${day.dayName}: ${getPrimaryMuscles(day).map((muscle) => capitalize(muscle)).join(', ')}"))
           .toList(),
     );
   }
@@ -162,12 +162,12 @@ class _WorkoutPlannerPageState extends State<WorkoutPlannerPage>
   }
 
   ElevatedButton _buildStepperButton(
-      BuildContext context, {
-        required String label,
-        required IconData icon,
-        required VoidCallback onPressed,
-        bool isPrimary = false,
-      }) {
+    BuildContext context, {
+    required String label,
+    required IconData icon,
+    required VoidCallback onPressed,
+    bool isPrimary = false,
+  }) {
     final backgroundColor = isPrimary
         ? Theme.of(context).colorScheme.primary
         : Theme.of(context).colorScheme.secondary;
@@ -233,7 +233,9 @@ class _WorkoutPlannerPageState extends State<WorkoutPlannerPage>
         // Reorder WorkoutDays to match the order of dayOfWeek
         List<String> dayOrder = dayOfWeek.toList();
         workoutDays.sort((a, b) {
-          return dayOrder.indexOf(a.dayName).compareTo(dayOrder.indexOf(b.dayName));
+          return dayOrder
+              .indexOf(a.dayName)
+              .compareTo(dayOrder.indexOf(b.dayName));
         });
       } else {
         workoutDays.removeWhere((element) => element.dayName == dayName);
