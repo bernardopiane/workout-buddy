@@ -13,9 +13,23 @@ class WorkoutPlan extends ChangeNotifier {
 
   WorkoutPlan.filled(this.planName, this.workoutDays);
 
+  // Set plan name
+  void setPlanName(String name) {
+    planName = name;
+    notifyListeners();
+    saveToSharedPreferences(); // Save state to SharedPreferences
+  }
+
   // Add a workout day to the plan
   void addWorkoutDay(WorkoutDay day) {
     workoutDays.add(day);
+    notifyListeners();
+    saveToSharedPreferences(); // Save state to SharedPreferences
+  }
+
+  // Set workout days
+  void setWorkoutDays(List<WorkoutDay> days) {
+    workoutDays = days;
     notifyListeners();
     saveToSharedPreferences(); // Save state to SharedPreferences
   }
