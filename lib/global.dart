@@ -34,7 +34,7 @@ Set<String> categories = <String>{
 Set<String> equipment = <String>{
   "Body Only",
   "Machine",
-  "FoamRoll",
+  "Foam Roll",
   "Kettlebells",
   "Dumbbell",
   "Cable",

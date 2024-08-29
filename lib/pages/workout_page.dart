@@ -5,6 +5,17 @@ class WorkoutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    // TODO display list of selected exercises, summary of targeted muscles
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Workout Page'),
+      ),
+      body: ListView(
+        children: const [
+          Text('Workout Page'),
+
+        ],
+      ),
+    );
   }
 }

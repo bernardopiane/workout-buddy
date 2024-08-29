@@ -12,7 +12,7 @@ class Equipment extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _getImageWidget(exercise.equipment),
-        const SizedBox(width: 8.0),
+        const SizedBox(width: 24.0),
         Text(
           exercise.equipment ?? 'Unknown',
           style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
@@ -21,39 +21,43 @@ class Equipment extends StatelessWidget {
     );
   }
 
-   // TODO get images for equipment
   Widget _getImageWidget(String? equipment) {
     // Map of equipment types to their corresponding asset paths
     const equipmentImages = {
-      "body only": "lib/assets/images/body.png",
-      "machine": "lib/assets/images/machine.png",
-      "other": "lib/assets/images/other.png",
-      "foam roll": "lib/assets/images/foam_roll.png",
-      "kettlebells": "lib/assets/images/kettlebells.png",
-      "dumbbell": "lib/assets/images/dumbbell.png",
-      "cable": "lib/assets/images/cable.png",
-      "barbell": "lib/assets/images/barbell.png",
-      "bands": "lib/assets/images/bands.png",
-      "medicine ball": "lib/assets/images/medicine_ball.png",
-      "exercise": "lib/assets/images/exercise.png",
-      "e-z curl bar": "lib/assets/images/ezcurlbar.png",
+      "body only": "lib/assets/images/Body Only.png",
+      "machine": "lib/assets/images/Machine.png",
+      "other": "lib/assets/images/Other.png",
+      "foam roll":
+          "lib/assets/images/Foam Roll.png", // TODO: add images for foam roll
+      "kettlebells": "lib/assets/images/Kettlebells.png",
+      "dumbbell": "lib/assets/images/Dumbbell.png",
+      "cable": "lib/assets/images/Cable.png",
+      "barbell": "lib/assets/images/Barbell.png",
+      "bands": "lib/assets/images/Bands.png",
+      "medicine ball": "lib/assets/images/Medicine Ball.png",
+      "exercise ball": "lib/assets/images/Exercise Ball.png",
+      "e-z curl bar": "lib/assets/images/E-Z Curl Bar.png",
     };
+    //TODO: add attribution to images
+    // "Icon made by juicy-fish from https://www.flaticon.com/authors/juicy-fish'
 
     // Retrieve the image path based on the equipment type
     final imagePath = equipmentImages[equipment?.toLowerCase() ?? ""];
 
+    debugPrint("Image path: $imagePath");
+
     if (imagePath != null) {
       return Image.asset(
         imagePath,
-        height: 100,
-        width: 100,
+        height: 48,
+        width: 48,
         fit: BoxFit.contain,
       );
     } else {
       // Fallback placeholder if the equipment type is unknown
       return const Placeholder(
-        fallbackHeight: 100,
-        fallbackWidth: 100,
+        fallbackHeight: 48,
+        fallbackWidth: 48,
         color: Colors.grey,
       );
     }
