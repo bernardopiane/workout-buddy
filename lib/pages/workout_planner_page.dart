@@ -92,31 +92,60 @@ class _WorkoutPlannerPageState extends State<WorkoutPlannerPage>
     if (workoutDays.isEmpty) {
       return const Center(child: Text('No days selected'));
     } else {
-      return Column(
+      return Wrap(
+        crossAxisAlignment: WrapCrossAlignment.start,
         children: [
-          TabBar(
-            controller: _tabController,
-            isScrollable: true,
-            labelColor: Theme.of(context).colorScheme.primary,
-            unselectedLabelColor: Theme.of(context).colorScheme.onSurface,
-            indicatorColor: Theme.of(context).colorScheme.primary,
-            tabs: workoutDays.map((day) => Tab(text: day.dayName)).toList(),
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.5,
-            child: TabBarView(
-              controller: _tabController,
-              children: workoutDays.map((day) {
-                return WorkoutSelector(
-                  workoutDay: day,
-                  addWorkout: _addWorkout,
-                  removeWorkout: _removeWorkout,
+          ...workoutDays.map((day) {
+            //   Open a Modal Sheet to display the WorkoutSelector
+            return GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return WorkoutSelector(
+                      workoutDay: day,
+                      addWorkout: _addWorkout,
+                      removeWorkout: _removeWorkout,
+                    );
+                  },
                 );
-              }).toList(),
-            ),
-          ),
+              },
+              child: Card(
+                child: SizedBox(
+                  height: 100,
+                  width: 100,
+                  child: Center(child: Text(day.dayName)),
+                ),
+              ),
+            );
+          }),
         ],
       );
+      // return Column(
+      //   children: [
+      //     TabBar(
+      //       controller: _tabController,
+      //       isScrollable: true,
+      //       labelColor: Theme.of(context).colorScheme.primary,
+      //       unselectedLabelColor: Theme.of(context).colorScheme.onSurface,
+      //       indicatorColor: Theme.of(context).colorScheme.primary,
+      //       tabs: workoutDays.map((day) => Tab(text: day.dayName)).toList(),
+      //     ),
+      //     SizedBox(
+      //       height: MediaQuery.of(context).size.height * 0.5,
+      //       child: TabBarView(
+      //         controller: _tabController,
+      //         children: workoutDays.map((day) {
+      //           return WorkoutSelector(
+      //             workoutDay: day,
+      //             addWorkout: _addWorkout,
+      //             removeWorkout: _removeWorkout,
+      //           );
+      //         }).toList(),
+      //       ),
+      //     ),
+      //   ],
+      // );
     }
   }
 

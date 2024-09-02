@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_buddy/model/workout_day.dart';
- import '../model/exercise.dart';
+import '../global.dart';
+import '../model/exercise.dart';
 import '../model/exercise_list.dart';
+import 'filter_dropdown.dart';
 
 class WorkoutSelector extends StatefulWidget {
   const WorkoutSelector({
@@ -13,7 +15,7 @@ class WorkoutSelector extends StatefulWidget {
   });
 
   final WorkoutDay workoutDay;
-   final Function(WorkoutDay workoutDay, Exercise exercise) addWorkout;
+  final Function(WorkoutDay workoutDay, Exercise exercise) addWorkout;
   final Function(WorkoutDay workoutDay, Exercise exercise) removeWorkout;
 
   @override
@@ -22,6 +24,9 @@ class WorkoutSelector extends StatefulWidget {
 
 class _WorkoutSelectorState extends State<WorkoutSelector> {
   String _searchQuery = '';
+  String? selectedLevel;
+  String? selectedPrimaryMuscle;
+  String? selectedCategory;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +40,24 @@ class _WorkoutSelectorState extends State<WorkoutSelector> {
               .toLowerCase()
               .contains(_searchQuery.toLowerCase());
         }).toSet();
+
+        // Apply filters
+        if (selectedLevel != null) {
+          filteredExercises = filteredExercises
+              .where((exercise) => exercise.level == selectedLevel)
+              .toSet();
+        }
+        if (selectedPrimaryMuscle != null) {
+          filteredExercises = filteredExercises
+              .where((exercise) =>
+                  exercise.primaryMuscles?.first == selectedPrimaryMuscle)
+              .toSet();
+        }
+        if (selectedCategory != null) {
+          filteredExercises = filteredExercises
+              .where((exercise) => exercise.category == selectedCategory)
+              .toSet();
+        }
 
         return Column(
           children: [
@@ -57,14 +80,50 @@ class _WorkoutSelectorState extends State<WorkoutSelector> {
                 },
               ),
             ),
+            // Filter selection
+            Row(
+              children: [
+                FilterDropdown(
+                  hintText: 'Select Level',
+                  value: selectedLevel,
+                  options: difficultyLevels,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedLevel = newValue;
+                    });
+                  },
+                ),
+                const SizedBox(width: 16.0),
+                FilterDropdown(
+                  hintText: 'Select Muscle',
+                  value: selectedPrimaryMuscle,
+                  options: primaryMuscles,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedPrimaryMuscle = newValue;
+                    });
+                  },
+                ),
+                const SizedBox(width: 16.0),
+                FilterDropdown(
+                  hintText: 'Select Category',
+                  value: selectedCategory,
+                  options: categories,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedCategory = newValue;
+                    });
+                  },
+                ),
+              ],
+            ),
             filteredExercises.isEmpty
                 ? const Center(child: Text('No exercises found'))
                 : Expanded(
                     child: ListView.builder(
                       itemCount: filteredExercises.length,
                       itemBuilder: (context, index) {
-                        Exercise exercise =
-                            filteredExercises.elementAt(index);
+                        Exercise exercise = filteredExercises.elementAt(index);
 
                         bool isSelected = widget.workoutDay.workouts
                             .any((e) => e.name == exercise.name);
