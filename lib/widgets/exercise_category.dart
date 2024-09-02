@@ -8,20 +8,26 @@ class ExerciseCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        _getIcon(exercise.category),
-        const SizedBox(width: 8.0),
-        Text(
-          exercise.category?.toUpperCase() ?? 'UNKNOWN',
-          style: const TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-          ),
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(48.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _getIcon(exercise.category),
+            const SizedBox(width: 8.0),
+            Text(
+              exercise.category?.toUpperCase() ?? 'UNKNOWN',
+              style: const TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 

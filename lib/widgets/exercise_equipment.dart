@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:workout_buddy/model/exercise.dart';
 
-class Equipment extends StatelessWidget {
-  const Equipment({super.key, required this.exercise});
+class ExerciseEquipment extends StatelessWidget {
+  const ExerciseEquipment({super.key, required this.exercise});
   final Exercise exercise;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        _getImageWidget(exercise.equipment),
-        const SizedBox(width: 24.0),
-        Text(
-          exercise.equipment ?? 'Unknown',
-          style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(48.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _getImageWidget(exercise.equipment),
+            const SizedBox(width: 8.0),
+            Text(
+              exercise.equipment?.toUpperCase() ?? 'Unknown',
+              style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
@@ -49,15 +55,15 @@ class Equipment extends StatelessWidget {
     if (imagePath != null) {
       return Image.asset(
         imagePath,
-        height: 48,
-        width: 48,
+        height: 24,
+        width: 24,
         fit: BoxFit.contain,
       );
     } else {
       // Fallback placeholder if the equipment type is unknown
       return const Placeholder(
-        fallbackHeight: 48,
-        fallbackWidth: 48,
+        fallbackHeight: 24,
+        fallbackWidth: 24,
         color: Colors.grey,
       );
     }

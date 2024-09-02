@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:workout_buddy/model/exercise.dart';
 import 'package:workout_buddy/model/favorites.dart';
 
-import '../widgets/equipment.dart';
+import '../widgets/exercise_equipment.dart';
 import '../widgets/exercise_category.dart';
 import '../widgets/exercise_image_display.dart';
 import '../widgets/related_exercises.dart';
@@ -68,100 +68,185 @@ class ExerciseDetail extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(BuildContext context, String title) {
-    return Text(
-      title,
-      style: Theme.of(context).textTheme.headlineSmall,
-    );
-  }
-
   Widget _buildMuscleColumn(
       BuildContext context, String title, List<String>? muscles) {
     return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          Wrap(
-            children: muscles
-                    ?.map(
-                      (muscle) => Padding(
-                        padding: const EdgeInsets.only(right: 8.0, top: 4.0),
-                        child: Chip(
-                          label: Text(muscle.toUpperCase()),
-                          backgroundColor:
-                              Theme.of(context).chipTheme.backgroundColor,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+            ),
+            const SizedBox(height: 8.0),
+            muscles != null && muscles.isNotEmpty
+                ? Wrap(
+                    spacing: 8.0, // Horizontal spacing between chips
+                    runSpacing: 4.0, // Vertical spacing between chips
+                    children: muscles.map((muscle) {
+                      return Chip(
+                        label: Text(
+                          muscle.toUpperCase(),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
                         ),
-                      ),
-                    )
-                    .toList() ??
-                [],
-          ),
-        ],
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                      );
+                    }).toList(),
+                  )
+                : Text(
+                    'No muscles specified',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.6),
+                        ),
+                  ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildCategoryAndEquipmentSection(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Category:",
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 8.0),
-            ExerciseCategory(exercise: exercise),
-          ],
-        ),
-        if (exercise.equipment != null && exercise.equipment!.isNotEmpty)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Equipment:",
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Determine if the screen is small or large based on available width
+        bool isLargeScreen = constraints.maxWidth > 600;
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: isLargeScreen
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Flexible(
+                      flex: 1,
+                      child: _buildCategorySection(context),
                     ),
+                    const SizedBox(
+                        width: 16.0), // Space between Category and Equipment
+                    if (exercise.equipment != null &&
+                        exercise.equipment!.isNotEmpty)
+                      Flexible(
+                        flex: 1,
+                        child: _buildEquipmentSection(context),
+                      ),
+                  ],
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildCategorySection(context),
+                    const SizedBox(
+                        height: 16.0), // Space between Category and Equipment
+                    if (exercise.equipment != null &&
+                        exercise.equipment!.isNotEmpty)
+                      _buildEquipmentSection(context),
+                  ],
+                ),
+        );
+      },
+    );
+  }
+
+  Widget _buildCategorySection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Category:",
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(height: 8.0),
-              Equipment(exercise: exercise),
-            ],
-          ),
+        ),
+        const SizedBox(height: 4.0),
+        ExerciseCategory(exercise: exercise),
+      ],
+    );
+  }
+
+  Widget _buildEquipmentSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Equipment:",
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        const SizedBox(height: 4.0),
+        ExerciseEquipment(exercise: exercise),
       ],
     );
   }
 
   Widget _buildInstructionsSection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildSectionTitle(context, 'Instructions:'),
-        const SizedBox(height: 8.0),
-        Wrap(
-          children: exercise.instructions
-                  ?.map((instruction) => Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Text(
-                          instruction,
-                          style: Theme.of(context).textTheme.bodyMedium,
+    final instructions = exercise.instructions;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionTitle(context, 'Instructions:'),
+          const SizedBox(height: 8.0),
+          instructions != null && instructions.isNotEmpty
+              ? ListView.separated(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: instructions.length,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 8.0),
+                  itemBuilder: (context, index) {
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${index + 1}. ',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
-                      ))
-                  .toList() ??
-              [],
-        ),
-      ],
+                        Expanded(
+                          child: Text(
+                            instructions[index],
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                )
+              : Text(
+                  'No instructions available.',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.6),
+                      ),
+                ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(BuildContext context, String title) {
+    return Text(
+      title,
+      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
     );
   }
 
