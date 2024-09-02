@@ -23,41 +23,50 @@ class ExerciseCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ExerciseDetail(exercise: exercise)),
+              builder: (context) => ExerciseDetail(exercise: exercise),
+            ),
           );
         },
         child: Padding(
-          padding: const EdgeInsets.all(12.0), // Adjust padding as needed
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildExerciseImage(),
-              const SizedBox(width: 12.0),
-              Flexible(
-                child: Text(
-                  exercise.name.toString(),
-                  style: Theme.of(context).textTheme.headlineMedium,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const Flexible(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
+          padding: const EdgeInsets.all(16.0), // Consistent padding
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              // Determine if we are on a small screen
+              bool isSmallScreen = constraints.maxWidth < 400;
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Exercise Image
+                  _buildExerciseImage(),
+                  const SizedBox(height: 12.0),
+
+                  // Exercise Name
+                  Text(
+                    exercise.name.toString(),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 8.0),
+
+                  // More Details Link
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Text(
                       'More details →',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
-                  ],
-                ),
-              ),
-            ],
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -65,13 +74,12 @@ class ExerciseCard extends StatelessWidget {
   }
 
   Widget _buildExerciseImage() {
-    return SizedBox(
-      height: 150,
-      width: 280,
-      child: ClipRRect(
+    return Container(
+      height: 150.0, // Fixed height for the image container
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.0),
-        child: Image.asset(
-          "lib/data/${exercise.images!.elementAt(0)}",
+        image: DecorationImage(
+          image: AssetImage("lib/data/${exercise.images!.elementAt(0)}"),
           fit: BoxFit.cover,
         ),
       ),
