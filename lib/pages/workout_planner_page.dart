@@ -121,31 +121,6 @@ class _WorkoutPlannerPageState extends State<WorkoutPlannerPage>
           }),
         ],
       );
-      // return Column(
-      //   children: [
-      //     TabBar(
-      //       controller: _tabController,
-      //       isScrollable: true,
-      //       labelColor: Theme.of(context).colorScheme.primary,
-      //       unselectedLabelColor: Theme.of(context).colorScheme.onSurface,
-      //       indicatorColor: Theme.of(context).colorScheme.primary,
-      //       tabs: workoutDays.map((day) => Tab(text: day.dayName)).toList(),
-      //     ),
-      //     SizedBox(
-      //       height: MediaQuery.of(context).size.height * 0.5,
-      //       child: TabBarView(
-      //         controller: _tabController,
-      //         children: workoutDays.map((day) {
-      //           return WorkoutSelector(
-      //             workoutDay: day,
-      //             addWorkout: _addWorkout,
-      //             removeWorkout: _removeWorkout,
-      //           );
-      //         }).toList(),
-      //       ),
-      //     ),
-      //   ],
-      // );
     }
   }
 
