@@ -85,6 +85,7 @@ class ExerciseDetail extends StatelessWidget {
             ),
             const SizedBox(height: 8.0),
             muscles != null && muscles.isNotEmpty
+            //   TODO: Make it collapsible if there are more than 2 muscles
                 ? Wrap(
                     spacing: 8.0, // Horizontal spacing between chips
                     runSpacing: 4.0, // Vertical spacing between chips

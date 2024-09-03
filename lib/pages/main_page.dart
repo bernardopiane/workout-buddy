@@ -128,9 +128,10 @@ class _MainPageState extends State<MainPage> {
             ? const Center(child: Text('No exercises found'))
             : GridView.builder(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 300,
+                  maxCrossAxisExtent: 380,
                   mainAxisSpacing: 16,
                   crossAxisSpacing: 16,
+                  childAspectRatio: 1,
                 ),
                 itemCount: exercises.length,
                 itemBuilder: (context, index) {

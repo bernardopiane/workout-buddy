@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
  // import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workout_buddy/model/favorites.dart';
 import 'package:workout_buddy/model/workout_plan.dart';
+import 'package:workout_buddy/pages/home_page.dart';
 import 'package:workout_buddy/pages/main_page.dart';
 import 'package:workout_buddy/theme_data.dart';
 
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.system, // Use system theme by default
-      home: const MainPage(),
+      home: const HomePage(),
     );
   }
 }
