@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:workout_buddy/model/exercise.dart';
 
@@ -53,6 +55,16 @@ class ExerciseEquipment extends StatelessWidget {
     debugPrint("Image path: $imagePath");
 
     if (imagePath != null) {
+      // If current theme is dark, invert the image colors
+      if (PlatformDispatcher.instance.platformBrightness == Brightness.dark) {
+        return Image.asset(
+          imagePath,
+          height: 24,
+          width: 24,
+          fit: BoxFit.contain,
+          color: Colors.white,
+        );
+      }
       return Image.asset(
         imagePath,
         height: 24,
