@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:workout_buddy/global.dart';
 import 'package:workout_buddy/pages/favorites_page.dart';
 import 'package:workout_buddy/pages/workout_planner_page.dart';
-import 'package:workout_buddy/widgets/exercise_card.dart';
-import '../model/exercise.dart';
+ import '../model/exercise.dart';
 import '../model/exercise_list.dart';
+import '../widgets/exercise_display_with_shadow.dart';
 import '../widgets/filter_dropdown.dart';
 
 class MainPage extends StatefulWidget {
@@ -128,14 +128,20 @@ class _MainPageState extends State<MainPage> {
             ? const Center(child: Text('No exercises found'))
             : GridView.builder(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 380,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  childAspectRatio: 1,
+                  maxCrossAxisExtent: 350,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
                 ),
                 itemCount: exercises.length,
                 itemBuilder: (context, index) {
-                  return ExerciseCard(exercise: exercises.elementAt(index));
+                  return GridTile(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16.0),
+                      child: ExerciseDisplayWithShadow(
+                        exercise: exercises.elementAt(index),
+                      ),
+                    ),
+                  );
                 },
                 padding: const EdgeInsets.all(16.0),
               );

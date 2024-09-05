@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:workout_buddy/model/favorites.dart';
 import 'package:workout_buddy/model/workout_plan.dart';
 import 'package:workout_buddy/pages/home_page.dart';
-import 'package:workout_buddy/pages/main_page.dart';
 import 'package:workout_buddy/theme_data.dart';
 
 import 'model/exercise_list.dart';

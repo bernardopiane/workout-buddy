@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../model/exercise.dart';
+import 'main_page.dart';
 
 // Dummy exercises for testing
 final exercises = [
@@ -30,6 +31,17 @@ class HomePage extends StatelessWidget {
               _buildHeader(),
               _buildStatsSection(),
               _buildRecentWorkoutsSection(context),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MainPage(),
+                    ),
+                  );
+                },
+                child: const Text('Main Page'),
+              ),
             ],
           ),
         ));
@@ -106,8 +118,6 @@ class HomePage extends StatelessWidget {
                   randomExercise), // Or any other widget to display the exercise
         ],
       );
-      return const SizedBox
-          .shrink(); // Return an empty widget if no recent workouts
     }
   }
 
