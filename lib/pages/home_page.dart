@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:workout_buddy/pages/user_page.dart';
 
 import '../model/exercise.dart';
 import 'main_page.dart';
@@ -41,6 +42,17 @@ class HomePage extends StatelessWidget {
                   );
                 },
                 child: const Text('Main Page'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const UserPage(),
+                    ),
+                  );
+                },
+                child: const Text('User Page'),
               ),
             ],
           ),
