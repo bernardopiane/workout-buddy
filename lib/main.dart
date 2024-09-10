@@ -7,6 +7,7 @@ import 'package:workout_buddy/pages/home_page.dart';
 import 'package:workout_buddy/theme_data.dart';
 
 import 'model/exercise_list.dart';
+import 'model/user_data.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +23,7 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (_) => Favorites()),
       ChangeNotifierProvider(create: (_) => ExerciseList()),
       ChangeNotifierProvider(create: (_) => WorkoutPlan()),
+      ChangeNotifierProvider(create: (_) => UserData()),
     ], child: const MyApp()),
   );
 }
@@ -35,6 +37,7 @@ class MyApp extends StatelessWidget {
     Provider.of<Favorites>(context, listen: false).loadFavorites();
     Provider.of<WorkoutPlan>(context, listen: false)
         .loadFromSharedPreferences();
+    Provider.of<UserData>(context, listen: false).loadUserData();
     return MaterialApp(
       title: 'Workout Buddy',
       theme: lightTheme,
