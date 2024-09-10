@@ -6,18 +6,21 @@ import 'package:workout_buddy/model/workout_day.dart';
 class WorkoutPlan extends ChangeNotifier {
   String planName;
   List<WorkoutDay> workoutDays;
+  String id;
 
   WorkoutPlan()
-      : planName = 'Untitled workout plan',
+      : id = UniqueKey().toString(),
+        planName = 'Untitled workout plan',
         workoutDays = [];
 
-  WorkoutPlan.filled(this.planName, this.workoutDays);
+  WorkoutPlan.filled(this.planName, this.workoutDays)
+      : id = UniqueKey().toString();
 
   // Set plan name
   void setPlanName(String name) {
     planName = name;
     notifyListeners();
-    saveToSharedPreferences(); // Save state to SharedPreferences
+    saveToSharedPreferences();
   }
 
   // Add a workout day to the plan
