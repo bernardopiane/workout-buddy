@@ -24,9 +24,10 @@ class WorkoutSelector extends StatefulWidget {
 
 class _WorkoutSelectorState extends State<WorkoutSelector> {
   String _searchQuery = '';
-  String? selectedLevel;
   String? selectedPrimaryMuscle;
   String? selectedCategory;
+  Set<String> selectedDifficulties =
+      difficultyLevels; // Default to all difficulties
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +43,16 @@ class _WorkoutSelectorState extends State<WorkoutSelector> {
         }).toSet();
 
         // Apply filters
-        if (selectedLevel != null) {
-          filteredExercises = filteredExercises
-              .where((exercise) => exercise.level == selectedLevel)
-              .toSet();
+        if (selectedDifficulties.isNotEmpty) {
+          // Change all values to lowercase so it works with database
+          Set<String> tempSet =
+              selectedDifficulties.map((e) => e.toLowerCase()).toSet();
+          debugPrint('Filtering exercises by difficulty');
+          filteredExercises = filteredExercises.where((exercise) {
+            return tempSet.contains(exercise.level);
+          }).toSet();
         }
+
         if (selectedPrimaryMuscle != null) {
           filteredExercises = filteredExercises
               .where((exercise) =>
@@ -80,20 +86,35 @@ class _WorkoutSelectorState extends State<WorkoutSelector> {
                 },
               ),
             ),
+
+            // Segmented buttons for selecting multiple difficulty levels
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SegmentedButton(
+                    multiSelectionEnabled: true, // Enable multiple selections
+                    segments: const [
+                      ButtonSegment(value: 'Beginner', label: Text('Beginner')),
+                      ButtonSegment(
+                          value: 'Intermediate', label: Text('Intermediate')),
+                      ButtonSegment(value: 'Expert', label: Text('Expert')),
+                    ],
+                    selected: selectedDifficulties,
+                    onSelectionChanged: (Set<String> newSelection) {
+                      setState(() {
+                        selectedDifficulties = newSelection;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+
             // Filter selection
             Row(
               children: [
-                FilterDropdown(
-                  hintText: 'Select Level',
-                  value: selectedLevel,
-                  options: difficultyLevels,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedLevel = newValue;
-                    });
-                  },
-                ),
-                const SizedBox(width: 16.0),
                 FilterDropdown(
                   hintText: 'Select Muscle',
                   value: selectedPrimaryMuscle,
