@@ -6,13 +6,15 @@ class UserData {
   double height;
   double weight;
   double weightGoal;
+  List<UserWeightHistory> weightHistory = [];
 
   UserData(
       {this.name = '',
       this.age = 0,
       this.height = 0.0,
       this.weight = 0.0,
-      this.weightGoal = 0.0});
+      this.weightGoal = 0.0,
+      this.weightHistory = const []});
 
   setName(String name) {
     assert(name.isNotEmpty, 'Name cannot be empty');
@@ -51,6 +53,12 @@ class UserData {
       height: json['height'] ?? 0.0,
       weight: json['weight'] ?? 0.0,
       weightGoal: json['weightGoal'] ?? 0.0,
+      //   Parse weight history from JSON
+      weightHistory: json['weightHistory'] != null
+          ? json['weightHistory']
+              .map((e) => UserWeightHistory.fromJson(e))
+              .toList()
+          : [],
     );
   }
 
@@ -61,6 +69,28 @@ class UserData {
     data['height'] = height;
     data['weight'] = weight;
     data['weightGoal'] = weightGoal;
+    data['weightHistory'] = weightHistory.map((e) => e.toJson()).toList();
+    return data;
+  }
+}
+
+class UserWeightHistory {
+  DateTime date;
+  double weight;
+
+  UserWeightHistory({required this.date, required this.weight});
+
+  factory UserWeightHistory.fromJson(Map<String, dynamic> json) {
+    return UserWeightHistory(
+      date: DateTime.parse(json['date']),
+      weight: json['weight'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['date'] = date.toString();
+    data['weight'] = weight;
     return data;
   }
 }
