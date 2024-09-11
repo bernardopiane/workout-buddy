@@ -1,9 +1,16 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:workout_buddy/model/workout_plan_manager.dart';
 import 'package:workout_buddy/pages/user_page.dart';
+import 'package:workout_buddy/pages/workout_details_page.dart';
+import 'package:workout_buddy/pages/workout_plan_manager_page.dart';
+import 'package:workout_buddy/pages/workout_planner_page.dart';
+import 'package:workout_buddy/utils.dart';
 
 import '../model/exercise.dart';
+import '../model/user_data.dart';
 import 'main_page.dart';
 
 // Dummy exercises for testing
@@ -32,6 +39,7 @@ class HomePage extends StatelessWidget {
               _buildHeader(),
               _buildStatsSection(),
               _buildRecentWorkoutsSection(context),
+              _buildTodayWorkoutsSection(context),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -53,6 +61,17 @@ class HomePage extends StatelessWidget {
                   );
                 },
                 child: const Text('User Page'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const WorkoutPlanManagerPage(),
+                    ),
+                  );
+                },
+                child: const Text('Workout Plan Manager'),
               ),
             ],
           ),
@@ -188,30 +207,95 @@ class HomePage extends StatelessWidget {
   }
 
   _buildUserCard() {
-    return const Card(
+    return Card(
       elevation: 2,
       child: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            Placeholder(
-              child: Text("user Profile Picture"),
-            ),
-            SizedBox(width: 16),
-            Column(
-              children: [
-                Placeholder(
-                  child: Text("User Name"),
-                ),
-                SizedBox(height: 8),
-                Placeholder(
-                  child: Text("User Email"),
-                ),
-              ],
-            ),
-          ],
-        ),
+        padding: const EdgeInsets.all(16.0),
+        child: Consumer<UserData>(builder: (context, userData, child) {
+          if (userData.name.isEmpty) {
+            return const Text("Please complete your profile");
+          }
+          return Row(
+            children: [
+              Column(
+                children: [
+                  Text(userData.name),
+                  const SizedBox(height: 8),
+                  // TODO setup secondary text style
+                  Text("${userData.age} yrs"),
+                ],
+              ),
+              const SizedBox(width: 16),
+              const Placeholder(
+                child: Text("user Profile Picture"),
+              ),
+            ],
+          );
+        }),
       ),
+    );
+  }
+
+  _buildTodayWorkoutsSection(BuildContext context) {
+    return Column(
+      children: [
+        const Text('Today\'s Workouts'),
+        const SizedBox(height: 16.0),
+        Consumer<WorkoutPlanManager>(
+          builder: (context, workoutPlanManager, child) {
+            if (workoutPlanManager.selectedPlan == null) {
+              return const Text("Please select a workout plan");
+            }
+            //   Match today with corresponding workout days
+            var today = DateTime.parse(DateTime.now().toString());
+            String stringfiedToday = convertNumberToWeekday(today.weekday);
+            // debugPrint("Today: $stringfiedToday");
+            // debugPrint("Workout days: ${workoutPlanManager.selectedPlan!.workoutDays.map((day) => day.dayName)}");
+
+            // TODO Check if display correctly Seg - Quarta
+
+            return Column(
+              children:
+                  workoutPlanManager.selectedPlan!.workoutDays.where((day) {
+                return day.dayName == stringfiedToday;
+              }).map((day) {
+                // debugPrint("Day: $day");
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => WorkoutDetailsPage(
+                          workoutPlan: workoutPlanManager.selectedPlan!,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Card(
+                    child: SizedBox(
+                      height: 100,
+                      width: 100,
+                      child: Center(child: Text(day.dayName)),
+                    ),
+                  ),
+                );
+              }).toList(),
+            );
+          },
+        ),
+        const SizedBox(height: 16.0),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const WorkoutPlannerPage(),
+              ),
+            );
+          },
+          child: const Text('Create New Workout Plan'),
+        )
+      ],
     );
   }
 }
