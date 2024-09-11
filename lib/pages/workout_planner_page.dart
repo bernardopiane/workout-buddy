@@ -7,6 +7,7 @@ import 'package:workout_buddy/model/workout_plan.dart';
 import 'package:workout_buddy/pages/workout_details_page.dart';
 import 'package:workout_buddy/widgets/workout_selector.dart';
 
+import '../model/workout_plan_manager.dart';
 import '../utils.dart';
 
 class WorkoutPlannerPage extends StatefulWidget {
@@ -224,6 +225,8 @@ class _WorkoutPlannerPageState extends State<WorkoutPlannerPage>
     final workoutPlan = Provider.of<WorkoutPlan>(context, listen: false);
     workoutPlan.setPlanName("Completed Workout");
     workoutPlan.setWorkoutDays(workoutDays);
+    final workoutPlanManager = Provider.of<WorkoutPlanManager>(context, listen: false);
+    workoutPlanManager.addWorkoutPlan(workoutPlan);
     resetSelections();
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => WorkoutDetailsPage(workoutPlan: workoutPlan),

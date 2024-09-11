@@ -11,6 +11,10 @@ class WorkoutPlanManager extends ChangeNotifier {
   // Add a new workout plan
   void addWorkoutPlan(WorkoutPlan plan) {
     workoutPlans.add(plan);
+    // If there is no selected plan, select the new plan
+    if (selectedPlan == null) {
+      selectWorkoutPlan(plan);
+    }
     notifyListeners();
     saveAllPlansToSharedPreferences();
   }
@@ -55,6 +59,7 @@ class WorkoutPlanManager extends ChangeNotifier {
         final List<dynamic> daysJson = decodedPlan['days'];
         final List<WorkoutDay> loadedDays =
             daysJson.map((dayJson) => WorkoutDay.fromJson(dayJson)).toList();
+        // Get the selected plan from SharedPreferences
         return WorkoutPlan.filled(planName, loadedDays);
       }).toList();
     }
@@ -75,11 +80,13 @@ class WorkoutPlanManager extends ChangeNotifier {
 
     if (selectedPlanName != null && workoutPlans.isNotEmpty) {
       selectedPlan = workoutPlans.firstWhere(
-            (plan) => plan.planName == selectedPlanName,
-        orElse: () => workoutPlans.first, // Return the first plan if no match is found
+        (plan) => plan.planName == selectedPlanName,
+        orElse: () =>
+            workoutPlans.first, // Return the first plan if no match is found
       );
     } else if (workoutPlans.isNotEmpty) {
-      selectedPlan = workoutPlans.first; // If no plan name is found, fallback to the first plan
+      selectedPlan = workoutPlans
+          .first; // If no plan name is found, fallback to the first plan
     } else {
       selectedPlan = null; // Set to null if there are no workout plans
     }
