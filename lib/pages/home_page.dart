@@ -154,6 +154,7 @@ class HomePage extends StatelessWidget {
 
   _buildStatCard({required String title, required String value}) {
     // TODO: Display user's stats and goals if set
+
     return Column(
       children: [
         const Placeholder(

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:workout_buddy/global.dart';
 import 'package:workout_buddy/pages/favorites_page.dart';
 import 'package:workout_buddy/pages/workout_planner_page.dart';
- import '../model/exercise.dart';
+import '../model/exercise.dart';
 import '../model/exercise_list.dart';
 import '../widgets/exercise_display_with_shadow.dart';
 import '../widgets/filter_dropdown.dart';
