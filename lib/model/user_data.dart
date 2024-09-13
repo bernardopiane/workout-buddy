@@ -12,14 +12,17 @@ class UserData extends ChangeNotifier {
   double weightGoal;
   List<UserWeightHistory> weightHistory = [];
   DateTime? lastWeightDate;
+  UserSettings userSettings;
 
-  UserData(
-      {this.name = '',
-      this.age = 0,
-      this.height = 0.0,
-      this.weight = 0.0,
-      this.weightGoal = 0.0,
-      this.weightHistory = const []});
+  UserData({
+    this.name = '',
+    this.age = 0,
+    this.height = 0.0,
+    this.weight = 0.0,
+    this.weightGoal = 0.0,
+    this.weightHistory = const [],
+    UserSettings? userSettings, // Initialize userSettings
+  }) : userSettings = userSettings ?? UserSettings();
 
   setName(String name) {
     assert(name.isNotEmpty, 'Name cannot be empty');
@@ -43,6 +46,9 @@ class UserData extends ChangeNotifier {
     assert(weight >= 0, 'Weight cannot be negative');
     this.weight = weight;
     lastWeightDate = DateTime.now();
+    // Resets the weight history and adds the current weight to the history
+    weightHistory.clear();
+    weightHistory.add(UserWeightHistory(date: lastWeightDate!, weight: weight));
     notifyListeners();
   }
 
@@ -67,6 +73,21 @@ class UserData extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Set and notify for useOnline in userSettings
+  void setUseOnline(bool useOnline) {
+    userSettings.useOnline = useOnline;
+    notifyListeners();
+    saveUserData(); // Save changes to SharedPreferences
+  }
+
+  // Set and notify for useMetric in userSettings
+  void setUseMetric(bool useMetric) {
+    debugPrint("Setting useMetric to $useMetric");
+    userSettings.useMetric = useMetric;
+    notifyListeners();
+    saveUserData(); // Save changes to SharedPreferences
+  }
+
   factory UserData.fromJson(Map<String, dynamic> json) {
     return UserData(
       name: json['name'] ?? '',
@@ -80,6 +101,9 @@ class UserData extends ChangeNotifier {
               .map((e) => UserWeightHistory.fromJson(e))
               .toList()
           : [],
+      //
+      userSettings:
+          UserSettings.fromJson(json['userSettings'] ?? UserSettings()),
     );
   }
 
@@ -91,6 +115,7 @@ class UserData extends ChangeNotifier {
     data['weight'] = weight;
     data['weightGoal'] = weightGoal;
     data['weightHistory'] = weightHistory.map((e) => e.toJson()).toList();
+    data['userSettings'] = userSettings.toJson();
     return data;
   }
 
@@ -120,11 +145,17 @@ class UserData extends ChangeNotifier {
             .toList();
       }
 
+      // Parse userSettings properly
+      if (decodedData['userSettings'] != null) {
+        userSettings = UserSettings.fromJson(decodedData['userSettings']);
+      } else {
+        userSettings = UserSettings(); // Default if no settings found
+      }
+
       notifyListeners();
       debugPrint("User data loaded");
     }
   }
-
 }
 
 class UserWeightHistory {
@@ -145,5 +176,28 @@ class UserWeightHistory {
     data['date'] = date.toString();
     data['weight'] = weight;
     return data;
+  }
+}
+
+class UserSettings {
+  bool useOnline;
+  bool useMetric;
+
+  UserSettings({this.useOnline = false, this.useMetric = true});
+
+  // Factory method to create a UserSettings instance from JSON
+  factory UserSettings.fromJson(Map<String, dynamic> json) {
+    return UserSettings(
+      useOnline: json['useOnline'] ?? false,
+      useMetric: json['useMetric'] ?? true,
+    );
+  }
+
+  // Convert UserSettings to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'useOnline': useOnline,
+      'useMetric': useMetric,
+    };
   }
 }
