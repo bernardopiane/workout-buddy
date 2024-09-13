@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workout_buddy/model/user_data.dart';
+
+import '../global.dart';
+import 'home_page.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -11,8 +16,22 @@ class OnboardingPage extends StatefulWidget {
 
 class _OnboardingPageState extends State<OnboardingPage> {
   int _currentStep = 0;
+  int lastStep = 4;
+
+  bool _metricSystem = false;
 
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    //   Load metric system from Shared Preferences
+    SharedPreferences.getInstance().then((prefs) {
+      setState(() {
+        _metricSystem = prefs.getBool('metricSystem') ?? false;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +44,36 @@ class _OnboardingPageState extends State<OnboardingPage> {
       body: Stepper(
         currentStep: _currentStep,
         onStepContinue: () {
-          setState(() {
-            _currentStep++;
-          });
+          if (_currentStep < lastStep) {
+            if (_currentStep == 1) {
+              debugPrint("Step is 1");
+              // If current step is 1, save user data when form is valid
+              if (_formKey.currentState!.validate()) {
+                debugPrint("Form is valid");
+                _formKey.currentState!.save();
+                Provider.of<UserData>(context, listen: false).saveUserData();
+                setState(() {
+                  _currentStep++;
+                });
+              } else {
+                debugPrint("Form is invalid");
+              }
+            } else {
+              setState(() {
+                _currentStep++;
+              });
+            }
+          } else {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const HomePage()));
+          }
         },
         onStepCancel: () {
-          setState(() {
-            _currentStep = 0;
-          });
+          if (_currentStep > 0) {
+            setState(() {
+              _currentStep--;
+            });
+          }
         },
         onStepTapped: (step) {
           setState(() {
@@ -40,11 +81,57 @@ class _OnboardingPageState extends State<OnboardingPage> {
           });
         },
         steps: [
-          const Step(
-            title: Text('Step 0'),
-            content: Text('Select if should use Kg or Lbs, cm or in, offline or online'),
-          //   TODO implement initial settings for user
-          ),
+          Step(
+              title: const Text('Step 0'),
+              content: Consumer<UserData>(builder: (context, userData, child) {
+                return Column(
+                  children: [
+                    const Text(
+                        'Select if should use Metric(Kg, Lbs, cm, in) or Imperial(ft, mi, m, yd) system'),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        //   Radio Selection for metric system
+                        Radio(
+                          value: _metricSystem,
+                          groupValue: metricSystem,
+                          onChanged: (value) {
+                            setState(() {
+                              _metricSystem = true;
+                            });
+                            //   Save using Shared Preferences
+                            SharedPreferences.getInstance().then((prefs) {
+                              prefs.setBool('metricSystem', _metricSystem);
+                            });
+                            userData.setUseMetric(_metricSystem);
+                            debugPrint("Metric system set to true");
+                          },
+                        ),
+                        const Text('Metric'),
+                        const SizedBox(width: 32.0),
+                        //   Radio Selection for imperial system
+                        Radio(
+                          value: !_metricSystem,
+                          groupValue: metricSystem,
+                          onChanged: (value) {
+                            setState(() {
+                              _metricSystem = false;
+                            });
+                            //   Save using Shared Preferences
+                            SharedPreferences.getInstance().then((prefs) {
+                              prefs.setBool('metricSystem', _metricSystem);
+                            });
+                            userData.setUseMetric(_metricSystem);
+                            debugPrint("Metric system set to false");
+                          },
+                        ),
+                        const Text('Imperial'),
+                      ],
+                    ),
+                  ],
+                );
+              })),
           Step(
             title: const Text('Step 1'),
             content: SingleChildScrollView(
@@ -69,7 +156,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             userData.setName(value!);
                           },
                         ),
-
                         TextFormField(
                           decoration: const InputDecoration(labelText: 'Age'),
                           initialValue: "",
@@ -84,7 +170,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             userData.setAge(int.tryParse(value!)!);
                           },
                         ),
-
                         TextFormField(
                           decoration:
                               const InputDecoration(labelText: 'Height'),
@@ -97,10 +182,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             return null;
                           },
                           onSaved: (value) {
+                            // TODO Fix not handling imperial system ( 5'8")
                             userData.setHeight(double.tryParse(value!)!);
                           },
                         ),
-
                         TextFormField(
                           decoration:
                               const InputDecoration(labelText: 'Weight'),
@@ -116,7 +201,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             userData.setWeight(double.tryParse(value!)!);
                           },
                         ),
-
                         TextFormField(
                           decoration:
                               const InputDecoration(labelText: 'Weight Goal'),
@@ -130,19 +214,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           },
                           onSaved: (value) {
                             userData.setWeightGoal(double.tryParse(value!)!);
-                          },
-                        ),
-
-                        //   Confirmation Button
-                        ElevatedButton(
-                          child: const Text('Confirm'),
-                          onPressed: () {
-                            // Save user data
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-                              //   Navigate to Home Page
-                              // TODO: implement navigation
-                            }
                           },
                         ),
                       ],
