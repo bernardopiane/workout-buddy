@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_buddy/model/workout_plan_manager.dart';
+import 'package:workout_buddy/pages/onboarding_page.dart';
 import 'package:workout_buddy/pages/user_page.dart';
 import 'package:workout_buddy/pages/workout_details_page.dart';
 import 'package:workout_buddy/pages/workout_plan_manager_page.dart';
@@ -73,6 +74,17 @@ class HomePage extends StatelessWidget {
                 },
                 child: const Text('Workout Plan Manager'),
               ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const OnboardingPage(),
+                    ),
+                  );
+                },
+                child: const Text('Onboarding'),
+              ),
             ],
           ),
         ));
@@ -100,7 +112,11 @@ class HomePage extends StatelessWidget {
           children: [
             _buildStatCard(title: 'Total Workouts', value: '10'),
             const SizedBox(width: 16),
-            _buildStatCard(title: 'Total Calories Burned', value: '1,000'),
+            Consumer<UserData>(
+              builder: (context, userData, child) {
+                return _buildCalorieCard(userData: userData);
+              },
+            ),
             const SizedBox(width: 16),
             _buildStatCard(title: 'Total Distance', value: '1,000'),
           ],
@@ -296,6 +312,28 @@ class HomePage extends StatelessWidget {
           },
           child: const Text('Create New Workout Plan'),
         )
+      ],
+    );
+  }
+
+  Widget _buildCalorieCard({required UserData userData}) {
+    double caloriesBurned = 0;
+    if (userData.weightHistory.isNotEmpty) {
+      caloriesBurned =
+          userData.weightHistory.elementAt(0).weight - userData.weight;
+    }
+
+    return Column(
+      children: [
+        const Text('Calories burned so far'),
+        const SizedBox(height: 16.0),
+        Text(
+          caloriesBurned.toStringAsFixed(2),
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ],
     );
   }
