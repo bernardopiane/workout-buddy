@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workout_buddy/model/user_data.dart';
 
-import '../global.dart';
 import 'home_page.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -19,6 +18,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   int lastStep = 4;
 
   bool _metricSystem = false;
+  // TODO modify so that the metric is saved per user and not global
 
   final _formKey = GlobalKey<FormState>();
 
@@ -94,8 +94,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       children: [
                         //   Radio Selection for metric system
                         Radio(
-                          value: _metricSystem,
-                          groupValue: metricSystem,
+                          value: true,
+                          groupValue: _metricSystem,
                           onChanged: (value) {
                             setState(() {
                               _metricSystem = true;
@@ -112,8 +112,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         const SizedBox(width: 32.0),
                         //   Radio Selection for imperial system
                         Radio(
-                          value: !_metricSystem,
-                          groupValue: metricSystem,
+                          value: false,
+                          groupValue: _metricSystem,
                           onChanged: (value) {
                             setState(() {
                               _metricSystem = false;

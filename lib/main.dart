@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workout_buddy/model/favorites.dart';
 import 'package:workout_buddy/model/workout_plan.dart';
 import 'package:workout_buddy/model/workout_plan_manager.dart';
 import 'package:workout_buddy/pages/home_page.dart';
+import 'package:workout_buddy/pages/onboarding_page.dart';
 import 'package:workout_buddy/theme_data.dart';
 
 import 'model/exercise_list.dart';
@@ -44,8 +46,37 @@ Future<void> main() async {
   );
 }
 
-class WorkoutBuddyApp extends StatelessWidget {
+class WorkoutBuddyApp extends StatefulWidget {
   const WorkoutBuddyApp({super.key});
+
+  @override
+  State<WorkoutBuddyApp> createState() => _WorkoutBuddyAppState();
+}
+
+class _WorkoutBuddyAppState extends State<WorkoutBuddyApp> {
+  bool _isFirstLaunch = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkFirstLaunch();
+  }
+
+  Future<void> _checkFirstLaunch() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isFirstLaunch = prefs.getBool('first_launch') ?? true;
+
+    if (isFirstLaunch) {
+      await prefs.setBool('first_launch', false);
+      setState(() {
+        _isFirstLaunch = true;
+      });
+    } else {
+      setState(() {
+        _isFirstLaunch = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +85,7 @@ class WorkoutBuddyApp extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.system,
-      home: const HomePage(),
+      home: _isFirstLaunch ? const OnboardingPage() : const HomePage(),
     );
   }
 }
