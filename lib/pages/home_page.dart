@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_buddy/model/workout_plan_manager.dart';
@@ -8,18 +7,15 @@ import 'package:workout_buddy/pages/user_page.dart';
 import 'package:workout_buddy/pages/workout_details_page.dart';
 import 'package:workout_buddy/pages/workout_plan_manager_page.dart';
 import 'package:workout_buddy/pages/workout_planner_page.dart';
-import 'package:workout_buddy/utils.dart';
-
 import '../model/exercise.dart';
 import '../model/user_data.dart';
+import '../utils.dart';
 import 'main_page.dart';
 
-// Dummy exercises for testing
 final exercises = [
   Exercise(name: '3/4 Sit-Up', images: ['lib/data/3_4_Sit-Up/0.jpg']),
   Exercise(name: '90/90 Hamstring', images: ['lib/data/90_90_Hamstring/0.jpg']),
-  Exercise(
-      name: 'Ab Crunch Machine', images: ['lib/data/Ab_Crunch_Machine/0.jpg']),
+  Exercise(name: 'Ab Crunch Machine', images: ['lib/data/Ab_Crunch_Machine/0.jpg']),
   Exercise(name: 'Ab Roller', images: ['lib/data/Ab_Roller/0.jpg']),
 ];
 
@@ -29,72 +25,36 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Home'),
+      appBar: AppBar(
+        title: const Text('Home'),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(),
+            const SizedBox(height: 16.0),
+            _buildStatsSection(),
+            const SizedBox(height: 16.0),
+            _buildRecentWorkoutsSection(context),
+            const SizedBox(height: 16.0),
+            _buildTodayWorkoutsSection(context),
+            const SizedBox(height: 16.0),
+            _buildNavigationButtons(context),
+          ],
         ),
-        body: SafeArea(
-          minimum: const EdgeInsets.all(16.0),
-          bottom: false,
-          child: Column(
-            children: [
-              _buildHeader(),
-              _buildStatsSection(),
-              _buildRecentWorkoutsSection(context),
-              _buildTodayWorkoutsSection(context),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const MainPage(),
-                    ),
-                  );
-                },
-                child: const Text('Main Page'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const UserPage(),
-                    ),
-                  );
-                },
-                child: const Text('User Page'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const WorkoutPlanManagerPage(),
-                    ),
-                  );
-                },
-                child: const Text('Workout Plan Manager'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const OnboardingPage(),
-                    ),
-                  );
-                },
-                child: const Text('Onboarding'),
-              ),
-            ],
-          ),
-        ));
+      ),
+    );
   }
 
-  _buildHeader() {
+  Widget _buildHeader() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         const Placeholder(
+          fallbackHeight: 50,
+          fallbackWidth: 50,
           child: Text('Logo'),
         ),
         _buildUserCard(),
@@ -102,10 +62,11 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  _buildStatsSection() {
+  Widget _buildStatsSection() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Stats'),
+        const Text('Stats', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 16),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -118,90 +79,66 @@ class HomePage extends StatelessWidget {
               },
             ),
             const SizedBox(width: 16),
-            _buildStatCard(title: 'Total Distance', value: '1,000'),
+            _buildStatCard(title: 'Total Distance', value: '1,000 km'),
           ],
         ),
       ],
     );
   }
 
-  _buildRecentWorkoutsSection(BuildContext context) {
-    Set<Exercise> recentExercises = {};
-    // TODO: Get recent exercises from the database
-    if (recentExercises.isNotEmpty) {
-      final random = Random();
-      final randomExercise =
-          recentExercises.elementAt(random.nextInt(recentExercises.length));
+  Widget _buildRecentWorkoutsSection(BuildContext context) {
+    Set<Exercise> recentExercises = {}; // Replace with real data
+    final random = Random();
+    final randomExercise = recentExercises.isNotEmpty
+        ? recentExercises.elementAt(random.nextInt(recentExercises.length))
+        : exercises[random.nextInt(exercises.length)]; // Use dummy data if no recent exercises
 
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Recent Workouts",
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 16.0),
-          _buildWorkoutCard(
-              exercise:
-                  randomExercise), // Or any other widget to display the exercise
-        ],
-      );
-    } else {
-      // Dummy data for testing
-      final random = Random();
-      final randomExercise =
-          exercises.elementAt(random.nextInt(exercises.length));
-
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Recent Workouts",
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 16.0),
-          _buildWorkoutCard(
-              exercise:
-                  randomExercise), // Or any other widget to display the exercise
-        ],
-      );
-    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Recent Workouts",
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
+        const SizedBox(height: 16.0),
+        _buildWorkoutCard(exercise: randomExercise),
+      ],
+    );
   }
 
-  _buildStatCard({required String title, required String value}) {
-    // TODO: Display user's stats and goals if set
-
+  Widget _buildStatCard({required String title, required String value}) {
     return Column(
       children: [
         const Placeholder(
+          fallbackHeight: 50,
+          fallbackWidth: 50,
           child: Text("Icon"),
         ),
-        Text(
-          title,
-        ),
+        Text(title),
         Text(
           value,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ],
     );
   }
 
-  _buildWorkoutCard({required Exercise exercise}) {
+  Widget _buildWorkoutCard({required Exercise exercise}) {
     return Card(
       child: SizedBox(
         height: 200,
         child: Stack(
           children: [
             Positioned.fill(
-              child: Image.asset(
-                exercise.images!.elementAt(0),
-                height: 200,
+              child: exercise.images != null && exercise.images!.isNotEmpty
+                  ? Image.asset(
+                exercise.images![0],
                 fit: BoxFit.cover,
-              ),
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(color: Colors.grey); // Placeholder for error
+                },
+              )
+                  : Container(color: Colors.grey), // Placeholder if no image
             ),
             Positioned.fill(
               child: Container(
@@ -211,10 +148,7 @@ class HomePage extends StatelessWidget {
             Center(
               child: Text(
                 exercise.name!,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
               ),
             ),
           ],
@@ -223,60 +157,62 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  _buildUserCard() {
+  Widget _buildUserCard() {
     return Card(
       elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Consumer<UserData>(builder: (context, userData, child) {
-          if (userData.name.isEmpty) {
-            return const Text("Please complete your profile");
-          }
-          return Row(
-            children: [
-              Column(
-                children: [
-                  Text(userData.name),
-                  const SizedBox(height: 8),
-                  // TODO setup secondary text style
-                  Text("${userData.age} yrs"),
-                ],
-              ),
-              const SizedBox(width: 16),
-              const Placeholder(
-                child: Text("user Profile Picture"),
-              ),
-            ],
-          );
-        }),
+        child: Consumer<UserData>(
+          builder: (context, userData, child) {
+            if (userData.name.isEmpty) {
+              return const Text("Please complete your profile");
+            }
+            return Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(userData.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    Text("${userData.age} yrs", style: Theme.of(context).textTheme.bodyMedium),
+                  ],
+                ),
+                const SizedBox(width: 16),
+                const Placeholder(fallbackHeight: 50, fallbackWidth: 50),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
 
-  _buildTodayWorkoutsSection(BuildContext context) {
+  Widget _buildTodayWorkoutsSection(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Today\'s Workouts'),
+        const Text('Today\'s Workouts', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 16.0),
         Consumer<WorkoutPlanManager>(
           builder: (context, workoutPlanManager, child) {
             if (workoutPlanManager.selectedPlan == null) {
               return const Text("Please select a workout plan");
             }
-            //   Match today with corresponding workout days
-            var today = DateTime.parse(DateTime.now().toString());
-            String stringfiedToday = convertNumberToWeekday(today.weekday);
-            // debugPrint("Today: $stringfiedToday");
-            // debugPrint("Workout days: ${workoutPlanManager.selectedPlan!.workoutDays.map((day) => day.dayName)}");
 
-            // TODO Check if display correctly Seg - Quarta
+            var today = DateTime.now();
+            String todayString = convertNumberToWeekday(today.weekday);
+
+
+            var todayWorkouts = workoutPlanManager.selectedPlan!.workoutDays.where((day) {
+              return day.dayName == todayString;
+            }).toList();
+
+            if (todayWorkouts.isEmpty) {
+              return const Text("No workouts planned for today");
+            }
 
             return Column(
-              children:
-                  workoutPlanManager.selectedPlan!.workoutDays.where((day) {
-                return day.dayName == stringfiedToday;
-              }).map((day) {
-                // debugPrint("Day: $day");
+              children: todayWorkouts.map((day) {
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -291,7 +227,6 @@ class HomePage extends StatelessWidget {
                   child: Card(
                     child: SizedBox(
                       height: 100,
-                      width: 100,
                       child: Center(child: Text(day.dayName)),
                     ),
                   ),
@@ -305,23 +240,19 @@ class HomePage extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => const WorkoutPlannerPage(),
-              ),
+              MaterialPageRoute(builder: (context) => const WorkoutPlannerPage()),
             );
           },
           child: const Text('Create New Workout Plan'),
-        )
+        ),
       ],
     );
   }
 
   Widget _buildCalorieCard({required UserData userData}) {
-    double caloriesBurned = 0;
-    if (userData.weightHistory.isNotEmpty) {
-      caloriesBurned =
-          userData.weightHistory.elementAt(0).weight - userData.weight;
-    }
+    double caloriesBurned = userData.weightHistory.isNotEmpty
+        ? userData.weightHistory.first.weight - userData.weight
+        : 0.0;
 
     return Column(
       children: [
@@ -329,10 +260,50 @@ class HomePage extends StatelessWidget {
         const SizedBox(height: 16.0),
         Text(
           caloriesBurned.toStringAsFixed(2),
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNavigationButtons(BuildContext context) {
+    return Column(
+      children: [
+        ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const MainPage()),
+            );
+          },
+          child: const Text('Main Page'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const UserPage()),
+            );
+          },
+          child: const Text('User Page'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const WorkoutPlanManagerPage()),
+            );
+          },
+          child: const Text('Workout Plan Manager'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const OnboardingPage()),
+            );
+          },
+          child: const Text('Onboarding'),
         ),
       ],
     );
