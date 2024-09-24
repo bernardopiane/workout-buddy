@@ -15,7 +15,8 @@ import 'main_page.dart';
 final exercises = [
   Exercise(name: '3/4 Sit-Up', images: ['lib/data/3_4_Sit-Up/0.jpg']),
   Exercise(name: '90/90 Hamstring', images: ['lib/data/90_90_Hamstring/0.jpg']),
-  Exercise(name: 'Ab Crunch Machine', images: ['lib/data/Ab_Crunch_Machine/0.jpg']),
+  Exercise(
+      name: 'Ab Crunch Machine', images: ['lib/data/Ab_Crunch_Machine/0.jpg']),
   Exercise(name: 'Ab Roller', images: ['lib/data/Ab_Roller/0.jpg']),
 ];
 
@@ -37,7 +38,7 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 16.0),
             _buildStatsSection(),
             const SizedBox(height: 16.0),
-            _buildRecentWorkoutsSection(context),
+            _buildNextWorkoutsSection(context),
             const SizedBox(height: 16.0),
             _buildTodayWorkoutsSection(context),
             const SizedBox(height: 16.0),
@@ -66,7 +67,8 @@ class HomePage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Stats', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const Text('Stats',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 16),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -86,22 +88,53 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildRecentWorkoutsSection(BuildContext context) {
-    Set<Exercise> recentExercises = {}; // Replace with real data
-    final random = Random();
-    final randomExercise = recentExercises.isNotEmpty
-        ? recentExercises.elementAt(random.nextInt(recentExercises.length))
-        : exercises[random.nextInt(exercises.length)]; // Use dummy data if no recent exercises
-
+  Widget _buildNextWorkoutsSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Recent Workouts",
+          "Next Workouts",
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(height: 16.0),
-        _buildWorkoutCard(exercise: randomExercise),
+        Consumer<WorkoutPlanManager>(
+          builder: (context, workoutPlanManager, child) {
+            if (workoutPlanManager.selectedPlan == null) {
+              return const Text("Please select a workout plan");
+            }
+
+            var today = DateTime.now();
+            String todayString = convertNumberToWeekday(today.weekday);
+            debugPrint("Today string: $todayString");
+
+            // Get the next workout day using todayString
+            // Check if today has a workout day
+            // If not, then look for the next workout day
+            var nextWorkoutDay = workoutPlanManager.selectedPlan!.workoutDays
+                .firstWhere((day) => day.dayName == todayString, orElse: () {
+              // If today has no workout day, look for the next workout day
+              var nextWorkoutDay = workoutPlanManager.selectedPlan!.workoutDays
+                  .firstWhere((day) => day.dayName != todayString);
+              debugPrint("Next workout day: $nextWorkoutDay");
+              return nextWorkoutDay;
+            });
+
+            if (nextWorkoutDay.workouts.isEmpty) {
+              return const Text("No workouts planned for today");
+            }
+
+            //Return the next workout day primary muscle being worked on with no duplicates
+            // To Set to remove duplicates
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: nextWorkoutDay.workouts
+                  .map((workout) =>
+                      _buildMuscleDisplay(workout.primaryMuscles![0]))
+                  .toSet()
+                  .toList(),
+            );
+          },
+        ),
       ],
     );
   }
@@ -132,12 +165,13 @@ class HomePage extends StatelessWidget {
             Positioned.fill(
               child: exercise.images != null && exercise.images!.isNotEmpty
                   ? Image.asset(
-                exercise.images![0],
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(color: Colors.grey); // Placeholder for error
-                },
-              )
+                      exercise.images![0],
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                            color: Colors.grey); // Placeholder for error
+                      },
+                    )
                   : Container(color: Colors.grey), // Placeholder if no image
             ),
             Positioned.fill(
@@ -148,7 +182,10 @@ class HomePage extends StatelessWidget {
             Center(
               child: Text(
                 exercise.name!,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
             ),
           ],
@@ -172,9 +209,11 @@ class HomePage extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(userData.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Text(userData.name,
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
-                    Text("${userData.age} yrs", style: Theme.of(context).textTheme.bodyMedium),
+                    Text("${userData.age} yrs",
+                        style: Theme.of(context).textTheme.bodyMedium),
                   ],
                 ),
                 const SizedBox(width: 16),
@@ -191,7 +230,8 @@ class HomePage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Today\'s Workouts', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const Text('Today\'s Workouts',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 16.0),
         Consumer<WorkoutPlanManager>(
           builder: (context, workoutPlanManager, child) {
@@ -202,8 +242,8 @@ class HomePage extends StatelessWidget {
             var today = DateTime.now();
             String todayString = convertNumberToWeekday(today.weekday);
 
-
-            var todayWorkouts = workoutPlanManager.selectedPlan!.workoutDays.where((day) {
+            var todayWorkouts =
+                workoutPlanManager.selectedPlan!.workoutDays.where((day) {
               return day.dayName == todayString;
             }).toList();
 
@@ -240,7 +280,8 @@ class HomePage extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const WorkoutPlannerPage()),
+              MaterialPageRoute(
+                  builder: (context) => const WorkoutPlannerPage()),
             );
           },
           child: const Text('Create New Workout Plan'),
@@ -291,7 +332,8 @@ class HomePage extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const WorkoutPlanManagerPage()),
+              MaterialPageRoute(
+                  builder: (context) => const WorkoutPlanManagerPage()),
             );
           },
           child: const Text('Workout Plan Manager'),
@@ -306,6 +348,20 @@ class HomePage extends StatelessWidget {
           child: const Text('Onboarding'),
         ),
       ],
+    );
+  }
+
+  // TODO: add muscle images
+  Widget _buildMuscleDisplay(String s) {
+    return const Placeholder(
+      fallbackHeight: 50,
+      fallbackWidth: 150,
+      color: Colors.grey,
+    );
+
+    return Image.asset(
+      "lib/assets/images/muscle_${s.toLowerCase()}.png",
+      fit: BoxFit.contain,
     );
   }
 }
