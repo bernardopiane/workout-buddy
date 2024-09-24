@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_buddy/model/workout_plan_manager.dart';
@@ -115,7 +114,6 @@ class HomePage extends StatelessWidget {
               // If today has no workout day, look for the next workout day
               var nextWorkoutDay = workoutPlanManager.selectedPlan!.workoutDays
                   .firstWhere((day) => day.dayName != todayString);
-              debugPrint("Next workout day: $nextWorkoutDay");
               return nextWorkoutDay;
             });
 
@@ -125,14 +123,17 @@ class HomePage extends StatelessWidget {
 
             //Return the next workout day primary muscle being worked on with no duplicates
             // To Set to remove duplicates
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: nextWorkoutDay.workouts
-                  .map((workout) =>
-                      _buildMuscleDisplay(workout.primaryMuscles![0]))
-                  .toSet()
-                  .toList(),
-            );
+            // nextWorkoutDay.workouts
+            //                     .map((workout) => _buildMuscleDisplay(workout.images![0]))
+            //                     .toSet()
+            //                     .toList(),
+
+            List<String> muscles = nextWorkoutDay.workouts
+                .map((workout) => workout.images![0])
+                .toSet()
+                .toList();
+
+            return SizedBox(height: 128, child: MuscleOverlay(muscles));
           },
         ),
       ],
@@ -351,17 +352,171 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // TODO: add muscle images
-  Widget _buildMuscleDisplay(String s) {
-    return const Placeholder(
-      fallbackHeight: 50,
-      fallbackWidth: 150,
-      color: Colors.grey,
-    );
-
+  Widget _buildMuscleDisplay(String imagePath) {
+    debugPrint("Muscle: $imagePath");
     return Image.asset(
-      "lib/assets/images/muscle_${s.toLowerCase()}.png",
-      fit: BoxFit.contain,
+      "lib/data/$imagePath",
+      fit: BoxFit.cover,
     );
+  }
+
+  /*Widget _buildMuscleOverlay(List<String> list, BuildContext context) {
+    //   Return a Pill shaped container with two exercises images
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        height: 100,
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.5),
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Stack(
+          children: [
+            //   First image on the left
+            Positioned(
+              top: 0,
+              left: 0,
+              child: Image.asset(
+                "lib/data/${list[0]}",
+                height: 256,
+                width: MediaQuery.of(context).size.width / 2,
+                fit: BoxFit.cover,
+                alignment: Alignment.bottomCenter,
+              ),
+            ),
+
+            //Second image on the right
+            Positioned(
+              top: 0,
+              // Left 50% of the screen
+              left: MediaQuery.of(context).size.width / 2,
+              // Right: 0 does not work as intended
+              child: Image.asset(
+                "lib/data/${list[1]}",
+                height: 256,
+                width: MediaQuery.of(context).size.width / 2,
+                fit: BoxFit.cover,
+                alignment: Alignment.bottomCenter,
+              ),
+            ),
+
+            Positioned(
+              top: 0,
+              left: MediaQuery.of(context).size.width / 2.75, // Adjust for separator width
+              child: Transform.rotate(
+                angle: 0.785398, // 45 degrees in radians
+                child: Container(
+                  width: 16, // Adjust width based on need
+                  height: 256, // Height should match image height
+                  color: Colors.white, // Separator color (can be changed)
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }*/
+}
+
+class DiagonalClipper extends CustomClipper<Path> {
+  final bool isLeft;
+
+  DiagonalClipper({required this.isLeft});
+
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    if (isLeft) {
+      path.moveTo(0, 0);
+      path.lineTo(size.width, 0);
+      path.lineTo(0, size.height);
+      path.close();
+    } else {
+      path.moveTo(size.width, 0);
+      path.lineTo(size.width, size.height);
+      path.lineTo(0, size.height);
+      path.close();
+    }
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) {
+    return false;
+  }
+}
+
+class MuscleOverlay extends StatelessWidget {
+  final List<String> images;
+
+  const MuscleOverlay(this.images, {super.key});
+
+  // TODO Change it so that it separates the images in a 45° angle in the middle
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(50), // Pill shaped container
+      child: SizedBox(
+        height: 256,
+        width: MediaQuery.of(context).size.width,
+        child: Stack(
+          children: [
+            // Left diagonal clipped image
+            Positioned.fill(
+              child: ClipPath(
+                clipper: DiagonalClipper(isLeft: true),
+                child: Image.asset(
+                  "lib/data/${images[0]}",
+                  fit: BoxFit.cover,
+                  alignment: Alignment.centerLeft,
+                ),
+              ),
+            ),
+            // Right diagonal clipped image
+            Positioned.fill(
+              child: ClipPath(
+                clipper: DiagonalClipper(isLeft: false),
+                child: Image.asset(
+                  "lib/data/${images[1]}",
+                  fit: BoxFit.cover,
+                  alignment: Alignment.centerRight,
+                ),
+              ),
+            ),
+            // Diagonal separator (angled line)
+            Positioned.fill(
+              child: CustomPaint(
+                painter: DiagonalSeparatorPainter(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class DiagonalSeparatorPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.black
+      ..strokeWidth = 3
+      ..style = PaintingStyle.stroke;
+
+    // Draw diagonal line
+    canvas.drawLine(
+      Offset(0, size.height),
+      Offset(size.width, 0),
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
   }
 }
