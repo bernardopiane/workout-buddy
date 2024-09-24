@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:workout_buddy/model/exercise.dart';
 import 'package:workout_buddy/model/workout_day.dart';
 import 'package:workout_buddy/model/workout_plan.dart';
+import 'package:workout_buddy/pages/exercise_detail_page.dart';
 import 'package:workout_buddy/utils.dart';
 
 class WorkoutDetailsPage extends StatelessWidget {
@@ -19,25 +20,29 @@ class WorkoutDetailsPage extends StatelessWidget {
             icon: const Icon(Icons.share),
             onPressed: () {
               // Handle share functionality
+              //   TODO: Implement share functionality
             },
           ),
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () {
               // Handle edit functionality
+              //   TODO: Implement edit functionality
             },
           ),
         ],
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ListView(
-            children: [
-              _buildHeader(),
-              const SizedBox(height: 16),
-              _buildWorkoutDays(context),
-            ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                _buildHeader(),
+                const SizedBox(height: 16),
+                _buildWorkoutDays(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -97,6 +102,15 @@ class WorkoutDetailsPage extends StatelessWidget {
         final exercise = day.workouts[index];
         return ListTile(
           leading: const Icon(Icons.fitness_center),
+          onTap: () {
+            // Navigate to the exercise details page
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ExerciseDetail(exercise: exercise),
+              ),
+            );
+          },
           title: Text(
             exercise.name!,
             style: const TextStyle(fontSize: 18),
