@@ -10,7 +10,7 @@ class UserData extends ChangeNotifier {
   double height;
   double weight;
   double weightGoal;
-  List<UserWeightHistory> weightHistory = [];
+  List<UserWeightHistory> weightHistory; // Non-nullable
   DateTime? lastWeightDate;
   UserSettings userSettings;
 
@@ -20,9 +20,10 @@ class UserData extends ChangeNotifier {
     this.height = 0.0,
     this.weight = 0.0,
     this.weightGoal = 0.0,
-    this.weightHistory = const [],
-    UserSettings? userSettings, // Initialize userSettings
-  }) : userSettings = userSettings ?? UserSettings();
+    List<UserWeightHistory>? weightHistory, // Nullable parameter
+    UserSettings? userSettings,
+  })  : weightHistory = weightHistory ?? [], // Initialize in initializer list
+        userSettings = userSettings ?? UserSettings();
 
   setName(String name) {
     assert(name.isNotEmpty, 'Name cannot be empty');
