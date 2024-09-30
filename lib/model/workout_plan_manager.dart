@@ -90,7 +90,6 @@ class WorkoutPlanManager extends ChangeNotifier {
     } else {
       selectedPlan = null; // Set to null if there are no workout plans
     }
-
     notifyListeners();
   }
 }

@@ -16,7 +16,7 @@ Set<String> primaryMuscles = <String>{
   "Quadriceps",
   "Shoulders",
   "Traps",
-   "Triceps"
+  "Triceps"
 };
 
 Set<String> difficultyLevels = <String>{"Beginner", "Intermediate", "Expert"};

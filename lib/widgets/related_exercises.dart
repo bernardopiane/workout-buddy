@@ -11,7 +11,6 @@ class RelatedExercises extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO fetch all exercises, filter by targeted muscle
     return _buildRelatedExercises(context, exercise);
   }
 
