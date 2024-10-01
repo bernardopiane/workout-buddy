@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_buddy/model/workout_plan_manager.dart';
@@ -31,11 +33,20 @@ class HomePage extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeader(),
-            const SizedBox(height: 16.0),
-            _buildStatsSection(),
+            Stack(
+              children: [
+                _buildBackground(context),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildHeader(),
+                    const SizedBox(height: 16.0),
+                    _buildStatsSection(),
+                  ],
+                ),
+              ],
+            ),
             const SizedBox(height: 16.0),
             _buildNextWorkoutsSection(context),
             const SizedBox(height: 16.0),
@@ -360,6 +371,18 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  Widget _buildBackground(BuildContext context) {
+    return Opacity(
+      opacity: 0.75,
+      child: Image.asset(
+        "lib/assets/images/backgrounds/weights.png",
+        width: MediaQuery.of(context).size.width,
+        fit: BoxFit.cover,
+        alignment: Alignment.center,
+      ),
+    );
+  }
+
   /*Widget _buildMuscleOverlay(List<String> list, BuildContext context) {
     //   Return a Pill shaped container with two exercises images
 
@@ -429,17 +452,23 @@ class DiagonalClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
+
     if (isLeft) {
+      // Left section
       path.moveTo(0, 0);
-      path.lineTo(size.width, 0);
+      path.lineTo(size.width * 0.6000000, 0);
+      path.lineTo(size.width * 0.4000000, size.height);
       path.lineTo(0, size.height);
       path.close();
     } else {
+      // Right section
       path.moveTo(size.width, 0);
+      path.lineTo(size.width * 0.6000000, 0);
+      path.lineTo(size.width * 0.4000000, size.height);
       path.lineTo(size.width, size.height);
-      path.lineTo(0, size.height);
       path.close();
     }
+
     return path;
   }
 
@@ -453,8 +482,6 @@ class MuscleOverlay extends StatelessWidget {
   final List<String> images;
 
   const MuscleOverlay(this.images, {super.key});
-
-  // TODO Change it so that it separates the images in a 45° angle in the middle
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -509,8 +536,8 @@ class DiagonalSeparatorPainter extends CustomPainter {
 
     // Draw diagonal line
     canvas.drawLine(
-      Offset(0, size.height),
-      Offset(size.width, 0),
+      Offset(size.width * 0.4000000, size.height),
+      Offset(size.width * 0.6000000, 0),
       paint,
     );
   }
