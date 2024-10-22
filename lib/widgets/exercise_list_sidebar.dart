@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:workout_buddy/global.dart';
+import 'package:workout_buddy/model/exercise_filters.dart';
+import 'package:workout_buddy/widgets/filter_dropdown.dart';
 
-class ExerciseListSidebar extends StatefulWidget { // Make it stateful
-  const ExerciseListSidebar({super.key});
-
+class ExerciseListSidebar extends StatefulWidget {
+  const ExerciseListSidebar(
+      {super.key, required this.activeFilters, required this.onFilterChanged});
+  final ExerciseFilters activeFilters;
+  final Function(ExerciseFilters newFilters) onFilterChanged;
 
   @override
   State<ExerciseListSidebar> createState() => _ExerciseListSidebarState();
@@ -31,40 +36,22 @@ class _ExerciseListSidebarState extends State<ExerciseListSidebar> {
         const Text("Filters",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8.0),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            FilterChip(
-              label: const Text("Secondary Muscle"),
-              selected: true,
-              onSelected: (bool value) {},
-            ),
-            FilterChip(
-              label: const Text("Level"),
-              selected: true,
-              onSelected: (bool value) {},
-            ),
-            FilterChip(
-              label: const Text("Force"),
-              selected: true,
-              onSelected: (bool value) {},
-            ),
-            FilterChip(
-              label: const Text("Equipment"),
-              selected: true,
-              onSelected: (bool value) {},
-            ),
-            FilterChip(
-              label: const Text("Mechanic"),
-              selected: true,
-              onSelected: (bool value) {},
-            ),
-            FilterChip(
-              label: const Text("Category"),
-              selected: true,
-              onSelected: (bool value) {},
-            ),
-          ],
+        SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              FilterDropdown(
+                hintText: 'Select Muscle',
+                value: widget.activeFilters.primaryMuscle,
+                options: primaryMuscles,
+                onChanged: (String? newValue) {
+                  widget.onFilterChanged(ExerciseFilters(
+                    primaryMuscle: newValue!,
+                  ));
+                },
+              ),
+            ],
+          ),
         ),
       ],
     );
