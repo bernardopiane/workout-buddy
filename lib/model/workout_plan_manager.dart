@@ -32,8 +32,8 @@ class WorkoutPlanManager extends ChangeNotifier {
   // Select a workout plan
   void selectWorkoutPlan(WorkoutPlan plan) {
     selectedPlan = plan;
-    notifyListeners();
     saveSelectedPlanToSharedPreferences();
+    notifyListeners();
   }
 
   // Save all workout plans to SharedPreferences

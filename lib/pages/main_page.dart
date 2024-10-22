@@ -27,8 +27,8 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Main Page'),
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        elevation: 2,
+        // Fixes appbar changing color when scrolling
+        scrolledUnderElevation: 0,
         actions: [
           FilterDropdown(
             hintText: 'Select Level',

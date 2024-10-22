@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_buddy/model/exercise.dart';
 import 'package:workout_buddy/model/favorites.dart';
+import 'package:workout_buddy/widgets/muscle_column.dart';
 
 import '../widgets/exercise_equipment.dart';
 import '../widgets/exercise_category.dart';
@@ -19,7 +20,6 @@ class ExerciseDetail extends StatelessWidget {
       floatingActionButton: Consumer<Favorites>(
         builder: (context, favoritesNotifier, child) {
           return FloatingActionButton(
-            backgroundColor: Theme.of(context).colorScheme.primary,
             child: Icon(
               favoritesNotifier.isFavorite(exercise)
                   ? Icons.favorite
@@ -47,13 +47,17 @@ class ExerciseDetail extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildMuscleColumn(
-                    context, 'Primary Muscles:', exercise.primaryMuscles),
+                MuscleColumn(
+                  title: 'Primary Muscles:',
+                  muscles: exercise.primaryMuscles,
+                ),
                 const SizedBox(width: 12.0),
                 if (exercise.secondaryMuscles != null &&
                     exercise.secondaryMuscles!.isNotEmpty)
-                  _buildMuscleColumn(
-                      context, 'Secondary Muscles:', exercise.secondaryMuscles),
+                  MuscleColumn(
+                    title: 'Secondary Muscles:',
+                    muscles: exercise.secondaryMuscles,
+                  ),
               ],
             ),
             const Divider(height: 32.0),
@@ -62,29 +66,6 @@ class ExerciseDetail extends StatelessWidget {
             _buildInstructionsSection(context),
             const Divider(height: 32.0),
             _buildRelatedExercisesSection(context),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMuscleColumn(
-      BuildContext context, String title, List<String>? muscles) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-            ),
-            const SizedBox(height: 8.0),
-            _buildMusclesChips(context, muscles),
           ],
         ),
       ),
@@ -239,31 +220,5 @@ class ExerciseDetail extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  _buildMusclesChips(BuildContext context, List<String>? muscles) {
-    if (muscles == null) {
-      return const Text("No muscles specified");
-    } else if (muscles.isNotEmpty) {
-      //   Display the muscles as chips in a row that can be scrolled horizontally
-      return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Wrap(
-          spacing: 8.0, // Horizontal spacing between chips
-          runSpacing: 4.0, // Vertical spacing between chips
-          children: muscles.map((muscle) {
-            return Chip(
-              label: Text(
-                muscle.toUpperCase(),
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
-              ),
-              backgroundColor: Theme.of(context).colorScheme.primary,
-            );
-          }).toList(),
-        ),
-      );
-    }
   }
 }
