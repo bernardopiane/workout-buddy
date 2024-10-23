@@ -48,7 +48,6 @@ class _ExerciseListSidebarState extends State<ExerciseListSidebar> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // TODO - Fix selecting all muscles
               FilterDropdown(
                 hintText: 'Select Muscle',
                 value: currentFilters.primaryMuscle.isNotEmpty
@@ -61,9 +60,9 @@ class _ExerciseListSidebarState extends State<ExerciseListSidebar> {
                     if (newValue == null) {
                       currentFilters =
                           currentFilters.copyWith(primaryMuscle: '');
-                      return;
                     } else {
-                      currentFilters = ExerciseFilters(primaryMuscle: newValue);
+                      currentFilters =
+                          currentFilters.copyWith(primaryMuscle: newValue);
                     }
                   });
 
