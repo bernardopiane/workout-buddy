@@ -87,21 +87,24 @@ class _ExerciseListSidebarState extends State<ExerciseListSidebar> {
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            FilterChip(
-              label: const Text("Strength"),
-              selected: true,
-              onSelected: (bool value) {},
-            ),
-            FilterChip(
-              label: const Text("Stretching"),
-              selected: true,
-              onSelected: (bool value) {},
-            ),
-            FilterChip(
-              label: const Text("Plyometrics"),
-              selected: true,
-              onSelected: (bool value) {},
-            ),
+            FilterDropdown(
+                hintText: 'Select Category',
+                value: null,
+                options: categories,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    // Update the local filter state
+                    if (newValue == null) {
+                      currentFilters = currentFilters.copyWith(category: '');
+                    } else {
+                      currentFilters =
+                          currentFilters.copyWith(category: newValue);
+                    }
+                  });
+
+                  // Notify parent widget of filter change
+                  widget.onFilterChanged(currentFilters);
+                }),
             // Add more categories here
           ],
         ),
