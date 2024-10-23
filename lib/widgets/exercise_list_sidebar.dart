@@ -48,7 +48,7 @@ class _ExerciseListSidebarState extends State<ExerciseListSidebar> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // TODO - ERROR - Dropdown value is not updated and if null it displays an error
+              // TODO - Fix selecting all muscles
               FilterDropdown(
                 hintText: 'Select Muscle',
                 value: currentFilters.primaryMuscle.isNotEmpty
@@ -58,9 +58,13 @@ class _ExerciseListSidebarState extends State<ExerciseListSidebar> {
                 onChanged: (String? newValue) {
                   setState(() {
                     // Update the local filter state
-                    currentFilters = ExerciseFilters(
-                      primaryMuscle: newValue!,
-                    );
+                    if (newValue == null) {
+                      currentFilters =
+                          currentFilters.copyWith(primaryMuscle: '');
+                      return;
+                    } else {
+                      currentFilters = ExerciseFilters(primaryMuscle: newValue);
+                    }
                   });
 
                   // Notify parent widget of filter change
