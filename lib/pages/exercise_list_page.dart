@@ -31,5 +31,6 @@ class _ExerciseListPageState extends State<ExerciseListPage> {
     setState(() {
       filters = newFilters;
     });
+    debugPrint("Active filters: ${filters.toString()}");
   }
 }

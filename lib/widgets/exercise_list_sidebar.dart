@@ -14,6 +14,14 @@ class ExerciseListSidebar extends StatefulWidget {
 }
 
 class _ExerciseListSidebarState extends State<ExerciseListSidebar> {
+  late ExerciseFilters currentFilters;
+
+  @override
+  void initState() {
+    super.initState();
+    currentFilters = widget.activeFilters;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -40,14 +48,23 @@ class _ExerciseListSidebarState extends State<ExerciseListSidebar> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // TODO - ERROR - Dropdown value is not updated and if null it displays an error
               FilterDropdown(
                 hintText: 'Select Muscle',
-                value: widget.activeFilters.primaryMuscle,
+                value: currentFilters.primaryMuscle.isNotEmpty
+                    ? currentFilters.primaryMuscle
+                    : null,
                 options: primaryMuscles,
                 onChanged: (String? newValue) {
-                  widget.onFilterChanged(ExerciseFilters(
-                    primaryMuscle: newValue!,
-                  ));
+                  setState(() {
+                    // Update the local filter state
+                    currentFilters = ExerciseFilters(
+                      primaryMuscle: newValue!,
+                    );
+                  });
+
+                  // Notify parent widget of filter change
+                  widget.onFilterChanged(currentFilters);
                 },
               ),
             ],

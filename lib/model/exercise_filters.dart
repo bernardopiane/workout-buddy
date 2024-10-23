@@ -16,4 +16,10 @@ class ExerciseFilters {
     this.mechanic = '',
     this.category = '',
   });
+
+//   ToString override
+  @override
+  String toString() {
+    return 'ExerciseFilters{primaryMuscle: $primaryMuscle, secondaryMuscle: $secondaryMuscle, level: $level, force: $force, equipment: $equipment, mechanic: $mechanic, category: $category}';
+  }
 }
