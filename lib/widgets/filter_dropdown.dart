@@ -19,21 +19,31 @@ class FilterDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textColor = Theme.of(context).textTheme.bodyMedium?.color; // Get text color from theme
 
     return DropdownButton<String>(
       value: value,
-      hint: Text(hintText),
+      hint: Text(
+        hintText,
+        style: TextStyle(color: textColor), // Apply text color to hint
+      ),
       onChanged: onChanged,
       items: [
         if (showAllOption)
           DropdownMenuItem<String>(
             value: null,
-            child: Text('All ${hintText.replaceAll('Select ', '')}s'),
+            child: Text(
+              'All ${hintText.replaceAll('Select ', '')}s',
+              style: TextStyle(color: textColor), // Apply text color to "All" option
+            ),
           ),
         ...options.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value.toLowerCase(),
-            child: Text(value),
+            child: Text(
+              value,
+              style: TextStyle(color: textColor), // Apply text color to dropdown items
+            ),
           );
         }),
       ],
