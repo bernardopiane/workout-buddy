@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:workout_buddy/pages/exercise_detail_page.dart';
 
 import '../model/exercise.dart';
 import '../model/exercise_filters.dart';
@@ -70,7 +71,17 @@ class ExerciseListView extends StatelessWidget {
           itemBuilder: (context, index) {
             final exercise = filteredExercises.elementAt(index);
             return ListTile(
-              title: Text(exercise.name.toString()),
+              onTap: () {
+                //   Navigates to Exercise Details Page
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ExerciseDetail(exercise: exercise),
+                  ),
+                );
+              },
+              title: Text(
+                exercise.name.toString(),
+              ),
             );
           },
         );
