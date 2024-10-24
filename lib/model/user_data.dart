@@ -12,7 +12,6 @@ class UserData extends ChangeNotifier {
   double weightGoal;
   List<UserWeightHistory> weightHistory; // Non-nullable
   DateTime? lastWeightDate;
-  UserSettings userSettings;
 
   UserData({
     this.name = '',
@@ -21,9 +20,7 @@ class UserData extends ChangeNotifier {
     this.weight = 0.0,
     this.weightGoal = 0.0,
     List<UserWeightHistory>? weightHistory, // Nullable parameter
-    UserSettings? userSettings,
-  })  : weightHistory = weightHistory ?? [], // Initialize in initializer list
-        userSettings = userSettings ?? UserSettings();
+  })  : weightHistory = weightHistory ?? []; // Initialize in initializer list
 
   setName(String name) {
     assert(name.isNotEmpty, 'Name cannot be empty');
@@ -74,21 +71,6 @@ class UserData extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Set and notify for useOnline in userSettings
-  void setUseOnline(bool useOnline) {
-    userSettings.useOnline = useOnline;
-    notifyListeners();
-    saveUserData(); // Save changes to SharedPreferences
-  }
-
-  // Set and notify for useMetric in userSettings
-  void setUseMetric(bool useMetric) {
-    debugPrint("Setting useMetric to $useMetric");
-    userSettings.useMetric = useMetric;
-    notifyListeners();
-    saveUserData(); // Save changes to SharedPreferences
-  }
-
   factory UserData.fromJson(Map<String, dynamic> json) {
     return UserData(
       name: json['name'] ?? '',
@@ -103,8 +85,6 @@ class UserData extends ChangeNotifier {
               .toList()
           : [],
       //
-      userSettings:
-          UserSettings.fromJson(json['userSettings'] ?? UserSettings()),
     );
   }
 
@@ -116,7 +96,6 @@ class UserData extends ChangeNotifier {
     data['weight'] = weight;
     data['weightGoal'] = weightGoal;
     data['weightHistory'] = weightHistory.map((e) => e.toJson()).toList();
-    data['userSettings'] = userSettings.toJson();
     return data;
   }
 
@@ -146,13 +125,6 @@ class UserData extends ChangeNotifier {
             .toList();
       }
 
-      // Parse userSettings properly
-      if (decodedData['userSettings'] != null) {
-        userSettings = UserSettings.fromJson(decodedData['userSettings']);
-      } else {
-        userSettings = UserSettings(); // Default if no settings found
-      }
-
       notifyListeners();
       debugPrint("User data loaded");
     }
@@ -177,28 +149,5 @@ class UserWeightHistory {
     data['date'] = date.toString();
     data['weight'] = weight;
     return data;
-  }
-}
-
-class UserSettings {
-  bool useOnline;
-  bool useMetric;
-
-  UserSettings({this.useOnline = false, this.useMetric = true});
-
-  // Factory method to create a UserSettings instance from JSON
-  factory UserSettings.fromJson(Map<String, dynamic> json) {
-    return UserSettings(
-      useOnline: json['useOnline'] ?? false,
-      useMetric: json['useMetric'] ?? true,
-    );
-  }
-
-  // Convert UserSettings to JSON
-  Map<String, dynamic> toJson() {
-    return {
-      'useOnline': useOnline,
-      'useMetric': useMetric,
-    };
   }
 }

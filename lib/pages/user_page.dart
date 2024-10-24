@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:workout_buddy/model/settings.dart';
 import 'package:workout_buddy/widgets/user_profile_card.dart';
 import '../model/user_data.dart';
 import 'onboarding_page.dart';
@@ -99,9 +100,13 @@ class UserPage extends StatelessWidget {
               keyboardType: TextInputType.number,
             );
           },
-          child: _buildUserInfo(
-            "Height",
-            "${userData.height} ${userData.userSettings.useMetric ? "cm" : "in"}",
+          child: Consumer<Settings>(
+            builder: (context, settings, child) {
+              return _buildUserInfo(
+                "Height",
+                "${userData.height} ${settings.useMetric ? "cm" : "in"}",
+              );
+            },
           ),
         ),
         GestureDetector(
@@ -117,9 +122,13 @@ class UserPage extends StatelessWidget {
               keyboardType: TextInputType.number,
             );
           },
-          child: _buildUserInfo(
-            "Weight",
-            "${userData.weight} ${userData.userSettings.useMetric ? "kg" : "lbs"}",
+          child: Consumer<Settings>(
+            builder: (context, settings, child) {
+              return _buildUserInfo(
+                "Weight",
+                "${userData.weight} ${settings.useMetric ? "kg" : "lbs"}",
+              );
+            },
           ),
         ),
         GestureDetector(
@@ -135,9 +144,13 @@ class UserPage extends StatelessWidget {
               keyboardType: TextInputType.number,
             );
           },
-          child: _buildUserInfo(
-            "Weight Goal",
-            "${userData.weightGoal} ${userData.userSettings.useMetric ? "kg" : "lbs"}",
+          child: Consumer<Settings>(
+            builder: (context, settings, child) {
+              return _buildUserInfo(
+                "Weight Goal",
+                "${userData.weightGoal} ${settings.useMetric ? "kg" : "lbs"}",
+              );
+            },
           ),
         ),
       ],

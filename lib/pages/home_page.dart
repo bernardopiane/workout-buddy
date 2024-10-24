@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:workout_buddy/model/workout_plan_manager.dart';
 import 'package:workout_buddy/pages/exercise_list_page.dart';
 import 'package:workout_buddy/pages/onboarding_page.dart';
+import 'package:workout_buddy/pages/settings_page.dart';
 import 'package:workout_buddy/pages/user_page.dart';
 import 'package:workout_buddy/pages/workout_details_page.dart';
 import 'package:workout_buddy/pages/workout_plan_manager_page.dart';
@@ -267,6 +268,7 @@ class HomePage extends StatelessWidget {
         'text': 'Exercise List Page',
         'page': ExerciseListPage(),
       },
+      {'text': 'Settings', 'page': const SettingsPage()},
     ];
 
     return Column(

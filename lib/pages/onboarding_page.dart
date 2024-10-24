@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:workout_buddy/model/settings.dart';
 import 'package:workout_buddy/model/user_data.dart';
 
 import 'home_page.dart';
@@ -102,9 +103,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             });
                             //   Save using Shared Preferences
                             SharedPreferences.getInstance().then((prefs) {
-                              prefs.setBool('metricSystem', _metricSystem);
+                              prefs.setBool('useMetric', _metricSystem);
                             });
-                            userData.setUseMetric(_metricSystem);
+                            Provider.of<Settings>(context, listen: false).useMetric = _metricSystem;
                             debugPrint("Metric system set to true");
                           },
                         ),
@@ -120,9 +121,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             });
                             //   Save using Shared Preferences
                             SharedPreferences.getInstance().then((prefs) {
-                              prefs.setBool('metricSystem', _metricSystem);
+                              prefs.setBool('useMetric', _metricSystem);
                             });
-                            userData.setUseMetric(_metricSystem);
+                            Provider.of<Settings>(context, listen: false).useMetric = _metricSystem;
                             debugPrint("Metric system set to false");
                           },
                         ),

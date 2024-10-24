@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workout_buddy/model/favorites.dart';
+import 'package:workout_buddy/model/settings.dart';
 import 'package:workout_buddy/model/workout_plan.dart';
 import 'package:workout_buddy/model/workout_plan_manager.dart';
 import 'package:workout_buddy/pages/home_page.dart';
@@ -42,6 +43,7 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (_) => workoutPlan),
       ChangeNotifierProvider(create: (_) => userData),
       ChangeNotifierProvider(create: (_) => workoutPlanManager),
+      ChangeNotifierProvider(create: (_) => Settings()),
     ], child: const WorkoutBuddyApp()),
   );
 }
@@ -80,12 +82,16 @@ class _WorkoutBuddyAppState extends State<WorkoutBuddyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Workout Buddy',
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: ThemeMode.system,
-      home: _isFirstLaunch ? const OnboardingPage() : const HomePage(),
+    return Consumer<Settings>(
+      builder: (context, settings, child) {
+        return MaterialApp(
+          title: 'Workout Buddy',
+          theme: lightTheme,
+          darkTheme: darkTheme,
+          themeMode: settings.useDarkTheme ? ThemeMode.dark : ThemeMode.light, // Use settings.useDarkTheme
+          home: _isFirstLaunch ? const OnboardingPage() : const HomePage(),
+        );
+      },
     );
   }
 }
