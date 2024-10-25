@@ -1,4 +1,4 @@
-package com.bernardopiane.workout_buddy
+package com.example.workout_buddy
 
 import io.flutter.embedding.android.FlutterActivity
 
