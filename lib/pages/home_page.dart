@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:workout_buddy/model/settings.dart';
 import 'package:workout_buddy/model/workout_plan_manager.dart';
 import 'package:workout_buddy/pages/exercise_list_page.dart';
 import 'package:workout_buddy/pages/onboarding_page.dart';
@@ -95,7 +96,13 @@ class HomePage extends StatelessWidget {
               },
             ),
             const SizedBox(width: 16),
-            _buildStatCard(title: 'Total Distance', value: '1,000 km'),
+            Consumer<Settings>(
+              builder: (context, settings, child) {
+                return _buildStatCard(
+                    title: 'Total Distance',
+                    value: "1000 ${settings.useMetric ? "km" : "mi"}");
+              },
+            ),
           ],
         ),
       ],
