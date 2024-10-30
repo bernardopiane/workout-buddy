@@ -7,8 +7,8 @@ import '../model/exercise_filters.dart';
 import '../model/exercise_list.dart';
 
 class ExerciseListView extends StatelessWidget {
-  const ExerciseListView({super.key, required this.filters});
-
+  const ExerciseListView({super.key, required this.filters, required this.searchQuery});
+  final String searchQuery;
   final ExerciseFilters filters;
 
   @override
@@ -54,6 +54,12 @@ class ExerciseListView extends StatelessWidget {
             matchesFilters = matchesFilters &&
                 (exercise.category?.toLowerCase() ==
                     filters.category.toLowerCase());
+          }
+
+          // Filter by search query
+          if (searchQuery.isNotEmpty) {
+            matchesFilters = matchesFilters &&
+                (exercise.name!.toLowerCase().contains(searchQuery.toLowerCase()));
           }
 
           return matchesFilters; // Return true if all filters match
