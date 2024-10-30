@@ -157,6 +157,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             userData.setName(value!);
                           },
                         ),
+                        SizedBox(height: 16),
                         TextFormField(
                           decoration: const InputDecoration(labelText: 'Age'),
                           initialValue: "",
@@ -171,6 +172,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             userData.setAge(int.tryParse(value!)!);
                           },
                         ),
+                        SizedBox(height: 16),
                         TextFormField(
                           decoration:
                               const InputDecoration(labelText: 'Height'),
@@ -187,6 +189,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             userData.setHeight(double.tryParse(value!)!);
                           },
                         ),
+                        SizedBox(height: 16),
                         TextFormField(
                           decoration:
                               const InputDecoration(labelText: 'Weight'),
@@ -202,6 +205,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             userData.setWeight(double.tryParse(value!)!);
                           },
                         ),
+                        SizedBox(height: 16),
                         TextFormField(
                           decoration:
                               const InputDecoration(labelText: 'Weight Goal'),
