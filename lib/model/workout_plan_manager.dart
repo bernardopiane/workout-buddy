@@ -50,8 +50,8 @@ class WorkoutPlanManager extends ChangeNotifier {
 
   // Load all workout plans from SharedPreferences
   Future<void> loadAllPlansFromSharedPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    final List<String>? plansJson = prefs.getStringList('workout_plans');
+    final prefs = SharedPreferencesAsync();
+    final List<String>? plansJson = await prefs.getStringList('workout_plans');
     if (plansJson != null) {
       workoutPlans = plansJson.map((planJson) {
         final Map<String, dynamic> decodedPlan = jsonDecode(planJson);
@@ -68,15 +68,15 @@ class WorkoutPlanManager extends ChangeNotifier {
   // Save the currently selected workout plan to SharedPreferences
   Future<void> saveSelectedPlanToSharedPreferences() async {
     if (selectedPlan != null) {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = SharedPreferencesAsync();
       await prefs.setString('selected_plan', selectedPlan!.planName);
     }
   }
 
   // Load the currently selected workout plan from SharedPreferences
   Future<void> loadSelectedPlanFromSharedPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? selectedPlanName = prefs.getString('selected_plan');
+    final prefs = SharedPreferencesAsync();
+    final String? selectedPlanName = await prefs.getString('selected_plan');
 
     if (selectedPlanName != null && workoutPlans.isNotEmpty) {
       selectedPlan = workoutPlans.firstWhere(

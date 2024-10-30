@@ -19,8 +19,9 @@ class UserData extends ChangeNotifier {
     this.height = 0.0,
     this.weight = 0.0,
     this.weightGoal = 0.0,
-    List<UserWeightHistory>? weightHistory, // Nullable parameter
-  })  : weightHistory = weightHistory ?? []; // Initialize in initializer list
+    List<UserWeightHistory>? weightHistory,
+    DateTime? lastWeightDate, // Nullable parameter
+  }) : weightHistory = weightHistory ?? []; // Initialize in initializer list
 
   setName(String name) {
     assert(name.isNotEmpty, 'Name cannot be empty');
@@ -65,7 +66,13 @@ class UserData extends ChangeNotifier {
     // Update current weight
     this.weight = weight;
     // Add weight to weight history, date format is ISO 8601
-    weightHistory.add(UserWeightHistory(date: lastWeightDate!, weight: weight));
+    if (lastWeightDate != null) {
+      weightHistory
+          .add(UserWeightHistory(date: lastWeightDate!, weight: weight));
+    } else {
+      weightHistory
+          .add(UserWeightHistory(date: DateTime.now(), weight: weight));
+    }
     // Update last weight date
     lastWeightDate = DateTime.now();
     notifyListeners();
@@ -78,6 +85,9 @@ class UserData extends ChangeNotifier {
       height: json['height'] ?? 0.0,
       weight: json['weight'] ?? 0.0,
       weightGoal: json['weightGoal'] ?? 0.0,
+      lastWeightDate: json['lastWeightDate'] != null
+          ? DateTime.parse(json['lastWeightDate'])
+          : null,
       //   Parse weight history from JSON
       weightHistory: json['weightHistory'] != null
           ? json['weightHistory']
@@ -95,6 +105,8 @@ class UserData extends ChangeNotifier {
     data['height'] = height;
     data['weight'] = weight;
     data['weightGoal'] = weightGoal;
+    // Get the last weight date in DateTime format
+    data['lastWeightDate'] = lastWeightDate?.toIso8601String();
     data['weightHistory'] = weightHistory.map((e) => e.toJson()).toList();
     return data;
   }
@@ -117,6 +129,9 @@ class UserData extends ChangeNotifier {
       height = decodedData['height'];
       weight = decodedData['weight'];
       weightGoal = decodedData['weightGoal'];
+      lastWeightDate = decodedData['lastWeightDate'] != null
+          ? DateTime.parse(decodedData['lastWeightDate'])
+          : null;
 
       // Parse weightHistory properly
       if (decodedData['weightHistory'] != null) {

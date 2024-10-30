@@ -65,8 +65,8 @@ class _WorkoutBuddyAppState extends State<WorkoutBuddyApp> {
   }
 
   Future<void> _checkFirstLaunch() async {
-    final prefs = await SharedPreferences.getInstance();
-    final isFirstLaunch = prefs.getBool('first_launch') ?? true;
+    final prefs = SharedPreferencesAsync();
+    final isFirstLaunch = await prefs.getBool('first_launch') ?? true;
 
     if (isFirstLaunch) {
       await prefs.setBool('first_launch', false);
@@ -88,7 +88,9 @@ class _WorkoutBuddyAppState extends State<WorkoutBuddyApp> {
           title: 'Workout Buddy',
           theme: lightTheme,
           darkTheme: darkTheme,
-          themeMode: settings.useDarkTheme ? ThemeMode.dark : ThemeMode.light, // Use settings.useDarkTheme
+          themeMode: settings.useDarkTheme
+              ? ThemeMode.dark
+              : ThemeMode.light, // Use settings.useDarkTheme
           home: _isFirstLaunch ? const OnboardingPage() : const HomePage(),
         );
       },
