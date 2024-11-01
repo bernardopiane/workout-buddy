@@ -1,8 +1,10 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_buddy/model/settings.dart';
 import 'package:workout_buddy/widgets/user_profile_card.dart';
 import '../model/user_data.dart';
+import '../utils.dart';
 import 'onboarding_page.dart';
 
 class UserPage extends StatelessWidget {
@@ -131,27 +133,73 @@ class UserPage extends StatelessWidget {
             },
           ),
         ),
-        GestureDetector(
-          onTap: () {
-            _displayEditDialog<double>(
-              context: context,
-              title: 'Weight Goal',
-              currentValue: userData.weightGoal,
-              onSave: (newValue) {
-                userData.setWeightGoal(newValue);
-                userData.saveUserData();
-              },
-              keyboardType: TextInputType.number,
+        GestureDetector(onTap: () {
+          _displayEditDialog<double>(
+            context: context,
+            title: 'Weight Goal',
+            currentValue: userData.weightGoal,
+            onSave: (newValue) {
+              userData.setWeightGoal(newValue);
+              userData.saveUserData();
+            },
+            keyboardType: TextInputType.number,
+          );
+        }, child: Consumer<Settings>(
+          builder: (context, settings, child) {
+            return _buildUserInfo(
+              "Weight Goal",
+              "${userData.weightGoal} ${settings.useMetric ? "kg" : "lbs"}",
             );
           },
-          child: Consumer<Settings>(
-            builder: (context, settings, child) {
-              return _buildUserInfo(
-                "Weight Goal",
-                "${userData.weightGoal} ${settings.useMetric ? "kg" : "lbs"}",
-              );
-            },
-          ),
+        )),
+        SizedBox(
+          height: 320,
+          width: MediaQuery.of(context).size.width,
+          child: Consumer<UserData>(builder: (context, userData, child) {
+            //   Display the graph using a LineChart for the user's weight history
+            return LineChart(
+              LineChartData(
+                lineBarsData: [
+                  LineChartBarData(
+                    spots: _getWeightSpots(userData),
+                    isCurved: true,
+                    color: Theme.of(context).primaryColor,
+                    belowBarData: BarAreaData(
+                        show: true,
+                        color: Theme.of(context).primaryColor.withOpacity(0.3)),
+                    dotData: FlDotData(show: true),
+                    barWidth: 4,
+                  ),
+                ],
+                titlesData: FlTitlesData(
+                  bottomTitles: AxisTitles(
+                    axisNameWidget: Text(
+                      "Date",
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (value, size) {
+                        List<String> days = [];
+                        for (int i = 0;
+                            i < userData.weightHistory.length;
+                            i++) {
+                          String day =
+                              '${userData.weightHistory[i].date.day}/${userData.weightHistory[i].date.month}';
+                          days.add(day);
+                        }
+
+                        return Text(
+                          days[value.toInt()].toString(),
+                          style: const TextStyle(fontSize: 12),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
         ),
       ],
     );
@@ -225,5 +273,21 @@ class UserPage extends StatelessWidget {
         );
       },
     );
+  }
+
+  _getWeightSpots(UserData userData) {
+    // Create the spots for the graph using the weight history
+    if (userData.weightHistory.isEmpty) {
+      return [];
+    }
+
+    final List<FlSpot> spots = [];
+    for (int i = 0; i < userData.weightHistory.length; i++) {
+      // TODO fix date formatting
+      FlSpot spot = FlSpot(i.toDouble(), userData.weightHistory[i].weight);
+      spots.add(spot);
+    }
+    debugPrint("Spots: ${spots.toString()}");
+    return spots;
   }
 }

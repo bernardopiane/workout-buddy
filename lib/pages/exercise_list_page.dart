@@ -43,7 +43,6 @@ class _ExerciseListPageState extends State<ExerciseListPage> {
                 onChanged: (query) {
                   setState(() {
                     _searchText = query;
-                    // You can also call a search/filter function here
                   });
                 },
               ),
