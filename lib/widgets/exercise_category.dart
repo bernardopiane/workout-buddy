@@ -9,20 +9,31 @@ class ExerciseCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 4,
+      elevation: 8, // Increased elevation for better shadow
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12), // Rounded corners
+      ),
       child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _getIcon(exercise.category),
-            const SizedBox(width: 8.0),
-            Text(
-              exercise.category?.toUpperCase() ?? 'UNKNOWN',
-              style: const TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
+            _getIcon(exercise.category, context),
+            const SizedBox(
+                width: 16.0), // Increased space between icon and text
+            Expanded(
+              // Allow text to expand and occupy available space
+              child: Text(
+                exercise.category?.toUpperCase() ?? 'UNKNOWN',
+                style: TextStyle(
+                  fontSize: 20.0, // Increased font size
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface, // Use theme color
+                  letterSpacing: 1.2, // Added letter spacing for readability
+                ),
               ),
             ),
           ],
@@ -31,27 +42,33 @@ class ExerciseCategory extends StatelessWidget {
     );
   }
 
-  // TODO get correct icons
-  static Icon _getIcon(String? category) {
+  static Icon _getIcon(String? category, BuildContext context) {
+    final primaryColor = Theme.of(context).colorScheme.primary;
+
     switch (category?.toLowerCase()) {
       case 'strength':
-        return const Icon(Icons.fitness_center);
+        return Icon(Icons.fitness_center,
+            color: primaryColor, size: 30); // Increased icon size
       case 'stretching':
-        return const Icon(Icons.self_improvement);
+        return Icon(Icons.self_improvement, color: primaryColor, size: 30);
       case 'plyometrics':
-        return const Icon(Icons.sports_kabaddi);
+        return Icon(Icons.sports_kabaddi, color: primaryColor, size: 30);
       case 'strongman':
-        return const Icon(Icons.sports_handball);
+        return Icon(Icons.sports_handball, color: primaryColor, size: 30);
       case 'powerlifting':
-        return const Icon(Icons.power);
+        return Icon(Icons.power, color: primaryColor, size: 30);
       case 'cardio':
-        return const Icon(Icons.directions_run);
+        return Icon(Icons.directions_run, color: primaryColor, size: 30);
       case 'olympic':
-        return const Icon(Icons.emoji_events);
+        return Icon(Icons.emoji_events, color: primaryColor, size: 30);
       case 'weightlifting':
-        return const Icon(Icons.sports_mma);
+        return Icon(Icons.sports_mma, color: primaryColor, size: 30);
       default:
-        return const Icon(Icons.circle_outlined);
+        return Icon(
+          Icons.circle_outlined,
+          color: primaryColor,
+          size: 30,
+        );
     }
   }
 }
