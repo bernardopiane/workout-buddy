@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:workout_buddy/model/exercise.dart';
-import 'package:workout_buddy/model/favorites.dart';
 import 'package:workout_buddy/widgets/muscle_column.dart';
 
 import '../widgets/exercise_equipment.dart';
