@@ -44,22 +44,7 @@ class ExerciseDetail extends StatelessWidget {
             const SizedBox(height: 16.0),
             _buildSectionTitle(context, 'Muscles worked on:'),
             const SizedBox(height: 8.0),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                MuscleColumn(
-                  title: 'Primary Muscles:',
-                  muscles: exercise.primaryMuscles,
-                ),
-                const SizedBox(width: 12.0),
-                if (exercise.secondaryMuscles != null &&
-                    exercise.secondaryMuscles!.isNotEmpty)
-                  MuscleColumn(
-                    title: 'Secondary Muscles:',
-                    muscles: exercise.secondaryMuscles,
-                  ),
-              ],
-            ),
+            _buildMuscleColumns(),
             const Divider(height: 32.0),
             _buildCategoryAndEquipmentSection(context),
             const Divider(height: 32.0),
@@ -72,10 +57,27 @@ class ExerciseDetail extends StatelessWidget {
     );
   }
 
+  Widget _buildMuscleColumns() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        MuscleColumn(
+          title: 'Primary Muscles:',
+          muscles: exercise.primaryMuscles,
+        ),
+        const SizedBox(width: 12.0),
+        if (exercise.secondaryMuscles?.isNotEmpty ?? false)
+          MuscleColumn(
+            title: 'Secondary Muscles:',
+            muscles: exercise.secondaryMuscles,
+          ),
+      ],
+    );
+  }
+
   Widget _buildCategoryAndEquipmentSection(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Determine if the screen is small or large based on available width
         bool isLargeScreen = constraints.maxWidth > 600;
 
         return Padding(
@@ -84,28 +86,18 @@ class ExerciseDetail extends StatelessWidget {
               ? Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Flexible(
-                      flex: 1,
-                      child: _buildCategorySection(context),
-                    ),
-                    const SizedBox(
-                        width: 16.0), // Space between Category and Equipment
-                    if (exercise.equipment != null &&
-                        exercise.equipment!.isNotEmpty)
-                      Flexible(
-                        flex: 1,
-                        child: _buildEquipmentSection(context),
-                      ),
+                    Expanded(child: _buildCategorySection(context)),
+                    const SizedBox(width: 16.0),
+                    if (exercise.equipment?.isNotEmpty ?? false)
+                      Expanded(child: _buildEquipmentSection(context)),
                   ],
                 )
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildCategorySection(context),
-                    const SizedBox(
-                        height: 16.0), // Space between Category and Equipment
-                    if (exercise.equipment != null &&
-                        exercise.equipment!.isNotEmpty)
+                    const SizedBox(height: 16.0),
+                    if (exercise.equipment?.isNotEmpty ?? false)
                       _buildEquipmentSection(context),
                   ],
                 ),
@@ -115,33 +107,35 @@ class ExerciseDetail extends StatelessWidget {
   }
 
   Widget _buildCategorySection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Category:",
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        const SizedBox(height: 4.0),
-        ExerciseCategory(exercise: exercise),
-      ],
+    return _buildInfoSection(
+      context,
+      title: "Category:",
+      child: ExerciseCategory(exercise: exercise),
     );
   }
 
   Widget _buildEquipmentSection(BuildContext context) {
+    return _buildInfoSection(
+      context,
+      title: "Equipment:",
+      child: ExerciseEquipment(exercise: exercise),
+    );
+  }
+
+  Widget _buildInfoSection(BuildContext context,
+      {required String title, required Widget child}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Equipment:",
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          title,
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 4.0),
-        ExerciseEquipment(exercise: exercise),
+        child,
       ],
     );
   }
@@ -169,16 +163,14 @@ class ExerciseDetail extends StatelessWidget {
                       children: [
                         Text(
                           '${index + 1}. ',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         Expanded(
-                          child: Text(
-                            instructions[index],
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
+                          child: Text(instructions[index],
+                              style: Theme.of(context).textTheme.bodyMedium),
                         ),
                       ],
                     );
@@ -187,11 +179,10 @@ class ExerciseDetail extends StatelessWidget {
               : Text(
                   'No instructions available.',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withOpacity(0.6),
-                      ),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.6)),
                 ),
         ],
       ),
@@ -201,9 +192,10 @@ class ExerciseDetail extends StatelessWidget {
   Widget _buildSectionTitle(BuildContext context, String title) {
     return Text(
       title,
-      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+      style: Theme.of(context)
+          .textTheme
+          .headlineSmall
+          ?.copyWith(fontWeight: FontWeight.bold), // Adjusted font size
     );
   }
 
@@ -214,10 +206,9 @@ class ExerciseDetail extends StatelessWidget {
         _buildSectionTitle(context, 'Related Exercises:'),
         const SizedBox(height: 8.0),
         SizedBox(
-          width: double.infinity,
-          height: 200,
-          child: RelatedExercises(exercise: exercise),
-        ),
+            width: double.infinity,
+            height: 200,
+            child: RelatedExercises(exercise: exercise)),
       ],
     );
   }
