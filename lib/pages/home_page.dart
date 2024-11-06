@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_buddy/model/settings.dart';
 import 'package:workout_buddy/model/workout_plan_manager.dart';
@@ -11,6 +12,7 @@ import 'package:workout_buddy/pages/workout_plan_manager_page.dart';
 import 'package:workout_buddy/pages/workout_planner_page.dart';
 import '../model/user_data.dart';
 import '../model/workout_day.dart';
+import '../model/workout_plan.dart';
 import '../utils.dart';
 import 'main_page.dart';
 
@@ -162,75 +164,365 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildTodayWorkoutsSection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Today\'s Workouts',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 16.0),
-        Consumer<WorkoutPlanManager>(
-          builder: (context, workoutPlanManager, child) {
-            if (workoutPlanManager.selectedPlan == null) {
-              return const Text("Please select a workout plan");
-            }
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          // TODO Play around with shadows and colors
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.fitness_center,
+                    color: Theme.of(context).primaryColor,
+                    size: 24,
+                  ),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'Today\'s Workouts',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                ],
+              ),
+              Text(
+                DateFormat('E, MMM d').format(DateTime.now()),
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Consumer<WorkoutPlanManager>(
+            builder: (context, workoutPlanManager, child) {
+              if (workoutPlanManager.selectedPlan == null) {
+                return _buildEmptyState(
+                  icon: Icons.fitness_center,
+                  title: "No Workout Plan Selected",
+                  subtitle: "Create or select a workout plan to get started",
+                  context: context,
+                );
+              }
 
-            var today = DateTime.now();
-            var todayString = convertNumberToWeekday(today.weekday);
-            var todayWorkouts = workoutPlanManager.selectedPlan!.workoutDays
-                .where((day) => day.dayName == todayString)
-                .toList();
+              var today = DateTime.now();
+              var todayString = convertNumberToWeekday(today.weekday);
+              var todayWorkouts = workoutPlanManager.selectedPlan!.workoutDays
+                  .where((day) => day.dayName == todayString)
+                  .toList();
 
-            if (todayWorkouts.isEmpty) {
-              return const Text("No workouts planned for today");
-            }
+              if (todayWorkouts.isEmpty) {
+                return _buildEmptyState(
+                  icon: Icons.wb_sunny_outlined,
+                  title: "Rest Day",
+                  subtitle: "Take it easy today or try a recovery workout",
+                  context: context,
+                );
+              }
 
-            return Column(
-              children: todayWorkouts
-                  .map((day) => GestureDetector(
-                        onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => WorkoutDetailsPage(
-                                    workoutPlan:
-                                        workoutPlanManager.selectedPlan!))),
-                        child: Card(
-                          elevation: 2,
-                          margin: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: SizedBox(
-                            height: 100,
-                            child: Center(child: Text(day.dayName)),
-                          ),
-                        ),
-                      ))
-                  .toList(),
-            );
-          },
-        ),
-        const SizedBox(height: 16.0),
-        ElevatedButton(
-          onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const WorkoutPlannerPage())),
-          child: const Text('Create New Workout Plan'),
-        ),
-      ],
+              return Column(
+                children: todayWorkouts
+                    .map((day) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12.0),
+                          child: _buildWorkoutCard(
+                              context, day, workoutPlanManager.selectedPlan!),
+                        ))
+                    .toList(),
+              );
+            },
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const WorkoutPlannerPage()),
+                  ),
+                  icon: const Icon(Icons.add),
+                  label: const Text('Create New Plan'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildCalorieCard({required double caloriesBurned}) {
+  Widget _buildWorkoutCard(
+      BuildContext context, WorkoutDay day, WorkoutPlan plan) {
+    // TODO Display a summary of the workouts in the card
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WorkoutDetailsPage(workoutPlan: plan),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  // TODO: Calculate what type of workout it being worked on (strength, plyometrics, etc.) and display the appropriate icon
+                  _getWorkoutIcon(day.workouts.first.category),
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // TODO: Display the summary of the workouts in the card
+                    Text(
+                      day.workouts.first.name ?? 'Workout',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${day.workouts.length} exercises',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.chevron_right,
+                color: Colors.grey.shade400,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required BuildContext context,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 32),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 48,
+            color: Colors.grey.shade400,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            subtitle,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 14,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  IconData _getWorkoutIcon(String? workoutType) {
+    switch (workoutType?.toLowerCase()) {
+      case 'strength':
+        return Icons.fitness_center;
+      case 'cardio':
+        return Icons.directions_run;
+      case 'flexibility':
+        return Icons.self_improvement;
+      case 'hiit':
+        return Icons.timer;
+      default:
+        return Icons.sports_gymnastics;
+    }
+  }
+
+  Widget _buildCalorieCard({
+    required double caloriesBurned,
+    double? dailyGoal,
+    String? lastUpdated,
+  }) {
+    final percentage = dailyGoal != null
+        ? (caloriesBurned / dailyGoal * 100).clamp(0, 100)
+        : null;
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(children: [
-          const Text('Calories burned so far'),
-          const SizedBox(height: 8.0),
-          Text(caloriesBurned.toStringAsFixed(2),
-              style:
-                  const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-        ]),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              // TODO Play around with colors
+              Colors.blue.shade50,
+              Colors.white,
+            ],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Calories Burned',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  Icon(
+                    Icons.local_fire_department,
+                    color: Colors.orange.shade400,
+                    size: 24,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12.0),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    caloriesBurned.toStringAsFixed(0),
+                    style: const TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 4),
+                    child: Text(
+                      'kcal',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              if (dailyGoal != null) ...[
+                const SizedBox(height: 16.0),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: LinearProgressIndicator(
+                    value: percentage! / 100,
+                    backgroundColor: Colors.grey.shade200,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      percentage >= 100 ? Colors.green : Colors.blue,
+                    ),
+                    minHeight: 8,
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${percentage.toStringAsFixed(1)}% of daily goal',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    Text(
+                      '${dailyGoal.toStringAsFixed(0)} kcal',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+              if (lastUpdated != null) ...[
+                const SizedBox(height: 12.0),
+                Text(
+                  'Last updated: $lastUpdated',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade600,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
       ),
     );
   }
