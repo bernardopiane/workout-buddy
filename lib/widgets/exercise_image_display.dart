@@ -32,10 +32,14 @@ class _ExerciseImageDisplayState extends State<ExerciseImageDisplay> {
         child: Stack(
           fit: StackFit.loose,
           children: [
-            Image.asset(
-              "lib/data/${widget.exercise.images!.elementAt(currentPosition)}",
-              fit: BoxFit.cover,
-              width: MediaQuery.of(context).size.width,
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: Image.asset(
+                "lib/data/${widget.exercise.images!.elementAt(currentPosition)}",
+                fit: BoxFit.cover,
+                width: MediaQuery.of(context).size.width,
+                key: ValueKey(currentPosition),
+              ),
             ),
             Container(
               height: MediaQuery.of(context).size.width * 0.50,
