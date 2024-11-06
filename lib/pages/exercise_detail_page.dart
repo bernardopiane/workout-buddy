@@ -7,6 +7,7 @@ import 'package:workout_buddy/widgets/muscle_column.dart';
 import '../widgets/exercise_equipment.dart';
 import '../widgets/exercise_category.dart';
 import '../widgets/exercise_image_display.dart';
+import '../widgets/favorite_icon.dart';
 import '../widgets/related_exercises.dart';
 
 class ExerciseDetail extends StatelessWidget {
@@ -17,20 +18,7 @@ class ExerciseDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Consumer<Favorites>(
-        builder: (context, favoritesNotifier, child) {
-          return FloatingActionButton(
-            child: Icon(
-              favoritesNotifier.isFavorite(exercise)
-                  ? Icons.favorite
-                  : Icons.favorite_border,
-            ),
-            onPressed: () {
-              favoritesNotifier.toggleFavorite(exercise);
-            },
-          );
-        },
-      ),
+      floatingActionButton: FavoriteIcon(exercise: exercise),
       appBar: AppBar(
         title: Text(exercise.name ?? 'Exercise Details'),
         elevation: 4,

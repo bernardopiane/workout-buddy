@@ -1,29 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class FavoriteIcon extends StatefulWidget {
-  const FavoriteIcon({super.key});
+import '../model/exercise.dart';
+import '../model/favorites.dart';
 
-  @override
-  FavoriteIconState createState() => FavoriteIconState();
-}
+class FavoriteIcon extends StatelessWidget {
+  const FavoriteIcon({
+    super.key,
+    required this.exercise,
+  });
 
-class FavoriteIconState extends State<FavoriteIcon> {
-  bool isFavorite = false;
+  final Exercise exercise;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        debugPrint("Favorite button clicked");
+    return Consumer<Favorites>(
+      builder: (context, favoritesNotifier, child) {
+        return FloatingActionButton(
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return ScaleTransition(
+                scale: animation,
+                child: child,
+              );
+            },
+            child: Icon(
+              favoritesNotifier.isFavorite(exercise)
+                  ? Icons.favorite
+                  : Icons.favorite_border,
+              key: ValueKey<bool>(favoritesNotifier.isFavorite(exercise)),
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
+          ),
+          onPressed: () {
+            favoritesNotifier.toggleFavorite(exercise);
+          },
+        );
       },
-      child: IconButton(
-        icon: isFavorite
-            ? const Icon(Icons.favorite)
-            : const Icon(Icons.favorite_border),
-        onPressed: () {
-          isFavorite = !isFavorite;
-        },
-      ),
     );
   }
 }
