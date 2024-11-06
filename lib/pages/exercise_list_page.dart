@@ -53,9 +53,13 @@ class _ExerciseListPageState extends State<ExerciseListPage> {
           ),
         ],
       ),
-      drawer: ExerciseListSidebar(
-        onFilterChanged: onFilterChanged,
-        activeFilters: filters,
+      drawer: SizedBox(
+        // Limit the width of the sidebar to 360 dp
+        width: MediaQuery.of(context).size.width > 360 ? 360 : null,
+        child: ExerciseListSidebar(
+          onFilterChanged: onFilterChanged,
+          activeFilters: filters,
+        ),
       ),
       body: ExerciseListView(
         filters: filters,
