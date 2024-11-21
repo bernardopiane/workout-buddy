@@ -14,6 +14,7 @@ import '../model/user_data.dart';
 import '../model/workout_day.dart';
 import '../model/workout_plan.dart';
 import '../utils.dart';
+import 'home_page_v2.dart';
 import 'main_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -87,15 +88,18 @@ class HomePage extends StatelessWidget {
                     title: 'Total Workouts', value: '$totalWorkouts');
               },
             ),
-            const SizedBox(width: 16),
-            Selector<UserData, double>(
-              selector: (_, userData) => userData.weightHistory.isNotEmpty
-                  ? userData.weightHistory.first.weight - userData.weight
-                  : 0.0,
-              builder: (context, caloriesBurned, child) {
-                return _buildCalorieCard(caloriesBurned: caloriesBurned);
-              },
-            ),
+            // const SizedBox(width: 16),
+            // Selector<UserData, double>(
+            //   selector: (_, userData) => userData.weightHistory.isNotEmpty
+            //       ? userData.weightHistory.first.weight - userData.weight
+            //       : 0.0,
+            //   builder: (context, caloriesBurned, child) {
+            //     return _buildStatCard(
+            //         title: 'Calories Burned',
+            //         value: caloriesBurned.toStringAsFixed(0));
+            //     // return _buildCalorieCard(caloriesBurned: caloriesBurned, context: context);
+            //   },
+            // ),
             const SizedBox(width: 16),
             Consumer<Settings>(
               builder: (context, settings, child) {
@@ -405,6 +409,7 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildCalorieCard({
+    required BuildContext context,
     required double caloriesBurned,
     double? dailyGoal,
     String? lastUpdated,
@@ -412,8 +417,9 @@ class HomePage extends StatelessWidget {
     final percentage = dailyGoal != null
         ? (caloriesBurned / dailyGoal * 100).clamp(0, 100)
         : null;
+
     return Card(
-      elevation: 4,
+      elevation: 6,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
         decoration: BoxDecoration(
@@ -422,8 +428,10 @@ class HomePage extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              // TODO Play around with colors
-              Colors.blue.shade50,
+              Theme.of(context)
+                  .colorScheme
+                  .primary
+                  .withOpacity(0.1), // Light primary color
               Colors.white,
             ],
           ),
@@ -436,18 +444,17 @@ class HomePage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     'Calories Burned',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
                   ),
                   Icon(
                     Icons.local_fire_department,
-                    color: Colors.orange.shade400,
-                    size: 24,
+                    color: Theme.of(context).colorScheme.secondary,
+                    size: 28,
                   ),
                 ],
               ),
@@ -457,10 +464,10 @@ class HomePage extends StatelessWidget {
                 children: [
                   Text(
                     caloriesBurned.toStringAsFixed(0),
-                    style: const TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
                   ),
                   const SizedBox(width: 4),
                   const Padding(
@@ -481,11 +488,16 @@ class HomePage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   child: LinearProgressIndicator(
                     value: percentage! / 100,
-                    backgroundColor: Colors.grey.shade200,
+                    backgroundColor: Colors.grey.shade300,
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      percentage >= 100 ? Colors.green : Colors.blue,
+                      percentage >= 100
+                          ? Theme.of(context).colorScheme.primary.withOpacity(
+                              0.8) // Assuming a success color is defined
+                          : Theme.of(context)
+                              .colorScheme
+                              .primary, // Primary color for progress
                     ),
-                    minHeight: 8,
+                    minHeight: 10,
                   ),
                 ),
                 const SizedBox(height: 8.0),
@@ -494,17 +506,20 @@ class HomePage extends StatelessWidget {
                   children: [
                     Text(
                       '${percentage.toStringAsFixed(1)}% of daily goal',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.7),
                       ),
                     ),
                     Text(
                       '${dailyGoal.toStringAsFixed(0)} kcal',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                     ),
                   ],
                 ),
@@ -529,6 +544,7 @@ class HomePage extends StatelessWidget {
 
   Widget _buildNavigationButtons(BuildContext context) {
     final buttons = [
+      {'text': 'Home 2', 'page': const HomePageV2()},
       {'text': 'Main Page', 'page': const MainPage()},
       {'text': 'User Page', 'page': const UserPage()},
       {'text': 'Workout Plan Manager', 'page': const WorkoutPlanManagerPage()},
