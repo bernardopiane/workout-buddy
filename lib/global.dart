@@ -48,7 +48,7 @@ Set<String> equipment = <String>{
 
 // End of Filters
 
-Set<String> dayOfWeek = <String>{
+Set<String> daysOfWeek = <String>{
   "Monday",
   "Tuesday",
   "Wednesday",

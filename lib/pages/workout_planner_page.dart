@@ -79,7 +79,7 @@ class _WorkoutPlannerPageState extends State<WorkoutPlannerPage>
 
   Widget _buildSelectDaysStep() {
     return Wrap(
-      children: dayOfWeek.map((e) {
+      children: daysOfWeek.map((e) {
         return CheckboxListTile(
           title: Text(e),
           value: workoutDays.any((element) => element.dayName == e),
@@ -238,7 +238,7 @@ class _WorkoutPlannerPageState extends State<WorkoutPlannerPage>
       if (value == true) {
         workoutDays.add(WorkoutDay(dayName: dayName, workouts: []));
         // Reorder WorkoutDays to match the order of dayOfWeek
-        List<String> dayOrder = dayOfWeek.toList();
+        List<String> dayOrder = daysOfWeek.toList();
         workoutDays.sort((a, b) {
           return dayOrder
               .indexOf(a.dayName)
