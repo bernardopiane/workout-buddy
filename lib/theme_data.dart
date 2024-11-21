@@ -45,6 +45,8 @@ final ThemeData lightTheme = ThemeData.light(
     bodyLarge: TextStyle(color: Colors.black87),
     bodyMedium: TextStyle(color: Colors.black54),
     headlineSmall: TextStyle(color: Colors.black87),
+    headlineMedium: TextStyle(color: Colors.black87),
+    headlineLarge: TextStyle(color: Colors.black87),
   ),
 
   // Icon theme
@@ -113,6 +115,8 @@ final ThemeData darkTheme = ThemeData.dark(
     bodyLarge: TextStyle(color: Colors.white),
     bodyMedium: TextStyle(color: Colors.white70),
     headlineSmall: TextStyle(color: Colors.white),
+    headlineMedium: TextStyle(color: Colors.white),
+    headlineLarge: TextStyle(color: Colors.white),
   ),
 
   // Icon theme
