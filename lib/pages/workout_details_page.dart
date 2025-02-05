@@ -3,7 +3,8 @@ import 'package:workout_buddy/model/exercise.dart';
 import 'package:workout_buddy/model/workout_day.dart';
 import 'package:workout_buddy/model/workout_plan.dart';
 import 'package:workout_buddy/pages/exercise_detail_page.dart';
-import 'package:workout_buddy/utils.dart';
+
+import '../utils/text_utils.dart';
 
 class WorkoutDetailsPage extends StatelessWidget {
   final WorkoutPlan workoutPlan;

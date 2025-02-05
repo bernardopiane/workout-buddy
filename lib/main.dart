@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workout_buddy/model/favorites.dart';
 import 'package:workout_buddy/model/settings.dart';
 import 'package:workout_buddy/model/workout_plan.dart';
-import 'package:workout_buddy/model/workout_plan_manager.dart';
+import 'package:workout_buddy/providers/workout_plan_manager.dart';
 import 'package:workout_buddy/pages/home_page.dart';
 import 'package:workout_buddy/pages/onboarding_page.dart';
 import 'package:workout_buddy/theme_data.dart';

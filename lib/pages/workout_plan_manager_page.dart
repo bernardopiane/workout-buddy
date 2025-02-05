@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:workout_buddy/pages/workout_planner_page.dart';
 
 import '../model/workout_plan.dart';
-import '../model/workout_plan_manager.dart';
+import '../providers/workout_plan_manager.dart';
 
 class WorkoutPlanManagerPage extends StatelessWidget {
   const WorkoutPlanManagerPage({super.key});

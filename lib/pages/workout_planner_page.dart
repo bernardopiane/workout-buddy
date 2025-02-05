@@ -7,8 +7,8 @@ import 'package:workout_buddy/model/workout_plan.dart';
 import 'package:workout_buddy/pages/workout_details_page.dart';
 import 'package:workout_buddy/widgets/workout_selector.dart';
 
-import '../model/workout_plan_manager.dart';
-import '../utils.dart';
+import '../providers/workout_plan_manager.dart';
+import '../utils/text_utils.dart';
 
 class WorkoutPlannerPage extends StatefulWidget {
   const WorkoutPlannerPage({super.key});

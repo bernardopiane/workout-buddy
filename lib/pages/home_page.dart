@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_buddy/model/settings.dart';
-import 'package:workout_buddy/model/workout_plan_manager.dart';
+import 'package:workout_buddy/providers/workout_plan_manager.dart';
 import 'package:workout_buddy/pages/exercise_list_page.dart';
 import 'package:workout_buddy/pages/onboarding_page.dart';
 import 'package:workout_buddy/pages/settings_page.dart';
@@ -14,7 +14,7 @@ import 'package:workout_buddy/pages/workout_planner_page.dart';
 import '../model/user_data.dart';
 import '../model/workout_day.dart';
 import '../model/workout_plan.dart';
-import '../utils.dart';
+import '../utils/date_utils.dart';
 import 'home/home_page_v2.dart';
 import 'main_page.dart';
 
