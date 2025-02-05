@@ -27,52 +27,62 @@ class ExerciseCard extends StatelessWidget {
             ),
           );
         },
-        child: Padding(
-          padding: const EdgeInsets.all(16.0), // Consistent padding
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Exercise Image
-              _buildExerciseImage(),
-              const SizedBox(height: 12.0),
-
-              // Exercise Name
-              Text(
-                exercise.name.toString(),
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 8.0),
-
-              // More Details Link
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Text(
-                  'More details →',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.bold,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildExerciseImage(),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 12.0),
+                  Text(
+                    exercise.name.toString(),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 8.0),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: InkWell(
+                      onTap: () {
+                        // Navigate to details or perform another action
+                      },
+                      child: Text(
+                        'More details →',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
-                ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildExerciseImage() {
-    return Container(
-      height: 150.0, // Fixed height for the image container
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16.0),
-        image: DecorationImage(
-          image: AssetImage("lib/data/${exercise.images!.elementAt(0)}"),
-          fit: BoxFit.cover,
+    return ClipRRect(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+      child: AspectRatio(
+        aspectRatio: 16 / 9,
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("lib/data/${exercise.images!.elementAt(0)}"),
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
       ),
     );
