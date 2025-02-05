@@ -13,6 +13,20 @@ class WorkoutPlanManagerPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Workout Plan Manager'),
+        actions: [
+          //   Button to debug workout plans
+          Consumer<WorkoutPlanManager>(
+            builder: (context, workoutPlanManager, child) {
+              return IconButton(
+                icon: const Icon(Icons.bug_report),
+                onPressed: () {
+                  //   Print all loaded workout plans
+                  debugPrint(workoutPlanManager.workoutPlans.toString());
+                },
+              );
+            },
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

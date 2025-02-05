@@ -7,6 +7,7 @@ import 'package:workout_buddy/pages/exercise_list_page.dart';
 import 'package:workout_buddy/pages/onboarding_page.dart';
 import 'package:workout_buddy/pages/settings_page.dart';
 import 'package:workout_buddy/pages/user_page.dart';
+import 'package:workout_buddy/pages/workout_day_page.dart';
 import 'package:workout_buddy/pages/workout_details_page.dart';
 import 'package:workout_buddy/pages/workout_plan_manager_page.dart';
 import 'package:workout_buddy/pages/workout_planner_page.dart';
@@ -14,7 +15,7 @@ import '../model/user_data.dart';
 import '../model/workout_day.dart';
 import '../model/workout_plan.dart';
 import '../utils.dart';
-import 'home_page_v2.dart';
+import 'home/home_page_v2.dart';
 import 'main_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -670,7 +671,15 @@ class HomePage extends StatelessWidget {
                       ),
                       child: InkWell(
                         onTap: () {
-                          // Navigate to workout details
+                          // Navigate to workout day page
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WorkoutDayPage(
+                                exercises: workoutDay.workouts,
+                              ),
+                            ),
+                          );
                         },
                         borderRadius: BorderRadius.circular(12),
                         child: Padding(
@@ -721,6 +730,8 @@ class HomePage extends StatelessWidget {
                                           .colorScheme
                                           .secondary,
                                     ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(height: 8),
                               Text(
