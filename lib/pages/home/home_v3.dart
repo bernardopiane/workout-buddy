@@ -2,25 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_buddy/providers/workout_plan_manager.dart';
 
+import '../../utils/constants.dart';
 import '../settings_page.dart';
-
-const LinearGradient primaryGradient = LinearGradient(
-  begin: Alignment.topLeft, // Corresponds to 135deg
-  end: Alignment.bottomRight, // Corresponds to 135deg
-  colors: [
-    Color(0xFF667EEA), // #667eea
-    Color(0xFF764BA2), // #764ba2
-  ],
-);
-
-const LinearGradient secondaryGradient = LinearGradient(
-  begin: Alignment.topLeft, // Corresponds to 135deg
-  end: Alignment.bottomRight, // Corresponds to 135deg
-  colors: [
-    Color(0xFFF093FB), // #f093fb
-    Color(0xFFF5576C), // #f5576c
-  ],
-);
 
 class HomeV3 extends StatelessWidget {
   const HomeV3({super.key});
@@ -99,104 +82,221 @@ class HomeV3 extends StatelessWidget {
           ),
           Positioned(
             top: 150,
-            left: 12,
-            right: 12,
+            left: 0,
+            right: 0,
             bottom: 0,
-            child: ListView(
-              children: [
-                Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: GridView(
-                    shrinkWrap: true,
-                    // Important to prevent unbounded height
-                    physics: NeverScrollableScrollPhysics(),
-                    // Disable GridView's own scrolling
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2),
-                    children: [
-                      Center(child: Text("Card 1")),
-                      Center(child: Text("Card 2")),
-                      Center(child: Text("Card 3")),
-                      Center(child: Text("Card 4")),
-                    ],
-                  ),
+            child: ListView(padding: defaultPadding, children: [
+              Card(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                Row(
+                child: GridView(
+                  shrinkWrap: true,
+                  // Important to prevent unbounded height
+                  physics: NeverScrollableScrollPhysics(),
+                  // Disable GridView's own scrolling
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2),
                   children: [
-                    // TODO Export workouts button
-                    Expanded(
+                    Center(child: Text("Card 1")),
+                    Center(child: Text("Card 2")),
+                    Center(child: Text("Card 3")),
+                    Center(child: Text("Card 4")),
+                  ],
+                ),
+              ),
+              Row(
+                children: [
+                  // TODO Export workouts button
+                  Expanded(
+                    child: Card(
+                      color: Colors.transparent,
+                      // Make card transparent to show gradient
+                      elevation: 0,
+                      // Optional: remove card shadow if gradient is enough
                       child: Container(
                         decoration: BoxDecoration(
                           gradient: primaryGradient,
                           borderRadius: BorderRadius.circular(
                               12), // Optional: for rounded corners
                         ),
-                        child: Card(
-                          color: Colors.transparent,
-                          // Make card transparent to show gradient
-                          elevation: 0,
-                          // Optional: remove card shadow if gradient is enough
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Placeholder(
-                                  fallbackHeight: 50,
-                                  fallbackWidth: 50,
-                                ),
-                                Text("Start Workout",
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary)),
-                              ],
-                            ),
+                        child: Padding(
+                          padding: defaultPadding,
+                          child: Column(
+                            children: [
+                              Placeholder(
+                                fallbackHeight: 50,
+                                fallbackWidth: 50,
+                              ),
+                              Text("Start Workout",
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary)),
+                            ],
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(width: 16),
-                    Expanded(
+                  ),
+                  Expanded(
+                    child: Card(
+                      color: Colors.transparent,
+                      // Make card transparent to show gradient
+                      elevation: 0,
+                      // Optional: remove card shadow if gradient is enough
                       child: Container(
                         decoration: BoxDecoration(
                           gradient: secondaryGradient,
                           borderRadius: BorderRadius.circular(
                               12), // Optional: for rounded corners
                         ),
-                        child: Card(
-                          color: Colors.transparent,
-                          // Make card transparent to show gradient
-                          elevation: 0,
-                          // Optional: remove card shadow if gradient is enough
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Placeholder(
-                                  fallbackHeight: 50,
-                                  fallbackWidth: 50,
-                                ),
-                                Text("View Progress",
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary)),
-                              ],
-                            ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Placeholder(
+                                fallbackHeight: 50,
+                                fallbackWidth: 50,
+                              ),
+                              Text("View Progress",
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary)),
+                            ],
                           ),
                         ),
                       ),
                     ),
-                  ],
-                )
-                // TODO Today workouts card
-                // TODO Upcoming workouts
-                // TODO bottom nav bar
-              ],
-            ),
+                  ),
+                ],
+              ),
+              // TODO Today workouts card
+              Card(
+                child: Padding(
+                  padding: defaultPadding,
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          // TODO add dynamic
+                          Text("TODAY"),
+                          Text(" * "),
+                          Text("WED, Jun 1"),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text("Workout Name"),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text("Workout stats"),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              // TODO Upcoming workouts
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      // TODO Style text
+                      Text("UPCOMING WORKOUTS"),
+                      Text("View all")
+                    ],
+                  ),
+                  //   TODO Display the upcoming workouts for the week
+                  Card(
+                    child: Padding(
+                      padding: defaultPadding,
+                      child: Column(
+                        children: [
+                          Text("Day"),
+                          Text("Workout Name"),
+                          Text("Workout stats"),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Card(
+                    child: Padding(
+                      padding: defaultPadding,
+                      child: Column(
+                        children: [
+                          Text("Day"),
+                          Text("Workout Name"),
+                          Text("Workout stats"),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Card(
+                    child: Padding(
+                      padding: defaultPadding,
+                      child: Column(
+                        children: [
+                          Text("Day"),
+                          Text("Workout Name"),
+                          Text("Workout stats"),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Card(
+                    child: Padding(
+                      padding: defaultPadding,
+                      child: Column(
+                        children: [
+                          Text("Day"),
+                          Text("Workout Name"),
+                          Text("Workout stats"),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Card(
+                    child: Padding(
+                      padding: defaultPadding,
+                      child: Column(
+                        children: [
+                          Text("Day"),
+                          Text("Workout Name"),
+                          Text("Workout stats"),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              // TODO bottom nav bar
+            ]),
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0,
+        onTap: (index) {
+          //   TODO Navigate to the appropriate page based on the selected tab
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.work),
+            label: 'Workouts',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
       ),
