@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_buddy/model/settings.dart';
+import 'package:workout_buddy/pages/home/home_v3.dart';
 import 'package:workout_buddy/providers/workout_plan_manager.dart';
 import 'package:workout_buddy/pages/exercise_list_page.dart';
 import 'package:workout_buddy/pages/onboarding_page.dart';
@@ -288,7 +289,8 @@ class HomePage extends StatelessWidget {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: Colors.grey.shade200),
+        side:
+            BorderSide(color: Theme.of(context).dividerColor.withOpacity(0.5)),
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
@@ -360,9 +362,10 @@ class HomePage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 32),
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
+        border:
+            Border.all(color: Theme.of(context).dividerColor.withOpacity(0.5)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -545,7 +548,7 @@ class HomePage extends StatelessWidget {
 
   Widget _buildNavigationButtons(BuildContext context) {
     final buttons = [
-      {'text': 'Home 2', 'page': const HomePageV2()},
+      {'text': 'Home 2', 'page': const HomeV3()},
       {'text': 'Main Page', 'page': const MainPage()},
       {'text': 'User Page', 'page': const UserPage()},
       {'text': 'Workout Plan Manager', 'page': const WorkoutPlanManagerPage()},

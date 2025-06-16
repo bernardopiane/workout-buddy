@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:workout_buddy/pages/settings_page.dart';
 import '../model/settings.dart';
 import '../model/user_data.dart';
 import '../widgets/user_profile_card.dart';
@@ -20,7 +21,11 @@ class UserPage extends StatelessWidget {
             icon: const Icon(Icons.settings),
             onPressed: () {
               // Navigate to settings page
-              // TODO: Implement settings navigation
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SettingsPage(),
+                ),
+              );
             },
           ),
         ],

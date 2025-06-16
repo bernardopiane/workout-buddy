@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workout_buddy/model/workout_day.dart';
 
+import '../utils/date_utils.dart';
+
 class WorkoutPlan extends ChangeNotifier {
   String planName;
   List<WorkoutDay> workoutDays;
@@ -79,6 +81,15 @@ class WorkoutPlan extends ChangeNotifier {
       notifyListeners();
       debugPrint("Loaded workout plan from SharedPreferences");
     }
+  }
+
+  WorkoutDay getTodayWorkouts() {
+    final today = DateTime.now();
+    final todayString = convertNumberToWeekday(today.weekday);
+    return workoutDays
+        .where((day) => day.dayName == todayString)
+        .toList()
+        .first;
   }
 
   @override
