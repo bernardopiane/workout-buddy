@@ -26,145 +26,263 @@ class _WorkoutSelectorState extends State<WorkoutSelector> {
   String _searchQuery = '';
   String? selectedPrimaryMuscle;
   String? selectedCategory;
-  Set<String> selectedDifficulties =
-      difficultyLevels; // Default to all difficulties
+  Set<String> selectedDifficulties = difficultyLevels.toSet();
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+
     return Consumer<ExerciseList>(
       builder: (context, exerciseList, child) {
-        Set<Exercise> exercises = exerciseList.getAllExercises();
+        final exercises = exerciseList.getAllExercises();
 
-        // Filter exercises based on the search query
+        // Filter logic
         Set<Exercise> filteredExercises = exercises.where((exercise) {
-          return exercise.name!
-              .toLowerCase()
-              .contains(_searchQuery.toLowerCase());
+          final matchesSearch = _searchQuery.isEmpty ||
+              exercise.name!.toLowerCase().contains(_searchQuery.toLowerCase());
+          final matchesDifficulty = selectedDifficulties.isEmpty ||
+              selectedDifficulties
+                  .map((d) => d.toLowerCase())
+                  .contains(exercise.level?.toLowerCase());
+          final matchesMuscle = selectedPrimaryMuscle == null ||
+              exercise.primaryMuscles?.contains(selectedPrimaryMuscle) == true;
+          final matchesCategory =
+              selectedCategory == null || exercise.category == selectedCategory;
+
+          return matchesSearch &&
+              matchesDifficulty &&
+              matchesMuscle &&
+              matchesCategory;
         }).toSet();
 
-        // Apply filters
-        if (selectedDifficulties.isNotEmpty) {
-          // Change all values to lowercase so it works with database
-          Set<String> tempSet =
-              selectedDifficulties.map((e) => e.toLowerCase()).toSet();
-          debugPrint('Filtering exercises by difficulty');
-          filteredExercises = filteredExercises.where((exercise) {
-            return tempSet.contains(exercise.level);
-          }).toSet();
-        }
-
-        if (selectedPrimaryMuscle != null) {
-          filteredExercises = filteredExercises
-              .where((exercise) =>
-                  exercise.primaryMuscles?.first == selectedPrimaryMuscle)
-              .toSet();
-        }
-        if (selectedCategory != null) {
-          filteredExercises = filteredExercises
-              .where((exercise) => exercise.category == selectedCategory)
-              .toSet();
-        }
-
-        return Column(
-          children: [
-            const Text(
-              'Select Workouts',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Search Exercises',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.search),
+        return Container(
+          padding: EdgeInsets.only(
+            top: 12,
+            left: 16,
+            right: 16,
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          decoration: BoxDecoration(
+            color: colorScheme.surface, // ✅ Theme surface (light/dark)
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 12,
+                offset: const Offset(0, -4),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Draggable handle
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    color: colorScheme.outline.withOpacity(0.4),
+                    // ✅ Theme-aware
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
+              ),
+
+              // Title
+              Text(
+                'Select Workouts for ${widget.workoutDay.dayName}',
+                style: textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.onSurface,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Search Field
+              TextField(
+                autofocus: true,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: colorScheme.surfaceVariant,
+                  // ✅ Subtle fill
+                  hintText: 'Search exercises...',
+                  hintStyle: textTheme.bodyMedium
+                      ?.copyWith(color: colorScheme.onSurface.withOpacity(0.6)),
+                  prefixIcon: Icon(Icons.search, color: colorScheme.primary),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                  isDense: true,
+                ),
+                style: textTheme.bodyMedium
+                    ?.copyWith(color: colorScheme.onSurface),
                 onChanged: (value) {
                   setState(() {
                     _searchQuery = value;
                   });
                 },
               ),
-            ),
+              const SizedBox(height: 12),
 
-            // Segmented buttons for selecting multiple difficulty levels
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SegmentedButton(
-                    multiSelectionEnabled: true, // Enable multiple selections
-                    segments: const [
-                      ButtonSegment(value: 'Beginner', label: Text('Beginner')),
-                      ButtonSegment(
-                          value: 'Intermediate', label: Text('Intermediate')),
-                      ButtonSegment(value: 'Expert', label: Text('Expert')),
-                    ],
-                    selected: selectedDifficulties,
-                    onSelectionChanged: (Set<String> newSelection) {
+              // Difficulty Filter Chips
+              Wrap(
+                spacing: 6,
+                children: difficultyLevels.map((level) {
+                  final isSelected = selectedDifficulties.contains(level);
+                  return FilterChip(
+                    label: Text(level),
+                    labelStyle: isSelected
+                        ? const TextStyle(color: Colors.white)
+                        : null,
+                    selected: isSelected,
+                    onSelected: (bool selected) {
                       setState(() {
-                        selectedDifficulties = newSelection;
+                        if (selected) {
+                          selectedDifficulties.add(level);
+                        } else {
+                          selectedDifficulties.remove(level);
+                        }
                       });
                     },
-                  ),
-                ],
+                    selectedColor: colorScheme.primary,
+                    // ✅ Theme primary
+                    side: !isSelected
+                        ? BorderSide(
+                            color: colorScheme.outline.withOpacity(0.3))
+                        : null,
+                  );
+                }).toList(),
               ),
-            ),
 
-            // Filter selection
-            Row(
-              children: [
-                FilterDropdown(
-                  hintText: 'Select Muscle',
-                  value: selectedPrimaryMuscle,
-                  options: primaryMuscles,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedPrimaryMuscle = newValue;
-                    });
-                  },
-                ),
-                const SizedBox(width: 16.0),
-                FilterDropdown(
-                  hintText: 'Select Category',
-                  value: selectedCategory,
-                  options: categories,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedCategory = newValue;
-                    });
-                  },
-                ),
-              ],
-            ),
-            filteredExercises.isEmpty
-                ? const Center(child: Text('No exercises found'))
-                : Expanded(
-                    child: ListView.builder(
-                      itemCount: filteredExercises.length,
-                      itemBuilder: (context, index) {
-                        Exercise exercise = filteredExercises.elementAt(index);
+              const SizedBox(height: 12),
 
-                        bool isSelected = widget.workoutDay.workouts
-                            .any((e) => e.name == exercise.name);
-
-                        return CheckboxListTile(
-                          title: Text(exercise.name!),
-                          value: isSelected,
-                          onChanged: (bool? value) {
-                            if (value == true) {
-                              widget.addWorkout(widget.workoutDay, exercise);
-                            } else {
-                              widget.removeWorkout(widget.workoutDay, exercise);
-                            }
-                            setState(() {});
-                          },
-                        );
+              // Dropdown Filters
+              Row(
+                children: [
+                  Expanded(
+                    child: FilterDropdown(
+                      hintText: 'Muscle Group',
+                      value: selectedPrimaryMuscle,
+                      options: primaryMuscles,
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedPrimaryMuscle = value;
+                        });
                       },
                     ),
                   ),
-          ],
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: FilterDropdown(
+                      hintText: 'Category',
+                      value: selectedCategory,
+                      options: categories,
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedCategory = value;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 16),
+
+              // Results Count
+              Text(
+                '${filteredExercises.length} exercise(s) found',
+                style: textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurface.withOpacity(0.7),
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              // Exercise List
+              filteredExercises.isEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 24),
+                      child: Center(
+                        child: Text(
+                          'No exercises match your filters',
+                          style: textTheme.bodyMedium?.copyWith(
+                            color: colorScheme.onSurface.withOpacity(0.6),
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
+                    )
+                  : SizedBox(
+                      height: 300,
+                      child: ListView.builder(
+                        itemCount: filteredExercises.length,
+                        itemBuilder: (context, index) {
+                          final exercise = filteredExercises.elementAt(index);
+                          final isSelected = widget.workoutDay.workouts
+                              .any((e) => e.name == exercise.name);
+
+                          return Card(
+                      elevation: isSelected ? 2 : 1,
+                      color: isSelected
+                          ? colorScheme.primaryContainer // ✅ Subtle highlight
+                          : colorScheme.surface, // ✅ Match background
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: CheckboxListTile(
+                        dense: true,
+                        title: Text(
+                          exercise.name!,
+                          style: textTheme.bodyMedium?.copyWith(
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            color: colorScheme.onSurface,
+                          ),
+                        ),
+                        subtitle: Text(
+                          [
+                            exercise.category ?? '',
+                            exercise.level ?? '',
+                            exercise.primaryMuscles?.join(', ') ?? ''
+                          ].join(' • '),
+                          style: textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurface.withOpacity(0.7),
+                          ),
+                        ),
+                        value: isSelected,
+                        onChanged: (value) {
+                          if (value == true) {
+                            widget.addWorkout(widget.workoutDay, exercise);
+                          } else {
+                            widget.removeWorkout(widget.workoutDay, exercise);
+                          }
+                          setState(() {
+                            // Rebuild to update checkbox and styling
+                          });
+                        },
+                        activeColor: colorScheme.primary,
+                        checkColor: colorScheme.onPrimary,
+                        controlAffinity: ListTileControlAffinity.leading,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              const SizedBox(height: 16),
+            ],
+          ),
         );
       },
     );

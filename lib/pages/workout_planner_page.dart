@@ -91,38 +91,98 @@ class _WorkoutPlannerPageState extends State<WorkoutPlannerPage>
 
   Widget _buildSelectWorkoutsStep() {
     if (workoutDays.isEmpty) {
-      return const Center(child: Text('No days selected'));
-    } else {
-      return Wrap(
-        crossAxisAlignment: WrapCrossAlignment.start,
-        children: [
-          ...workoutDays.map((day) {
-            //   Open a Modal Sheet to display the WorkoutSelector
-            return GestureDetector(
-              onTap: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return WorkoutSelector(
-                      workoutDay: day,
-                      addWorkout: _addWorkout,
-                      removeWorkout: _removeWorkout,
-                    );
-                  },
-                );
-              },
-              child: Card(
-                child: SizedBox(
-                  height: 100,
-                  width: 100,
-                  child: Center(child: Text(day.dayName)),
-                ),
-              ),
-            );
-          }),
-        ],
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.calendar_month, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            const Text(
+              'No Days Selected',
+              style: TextStyle(fontSize: 18, color: Colors.grey),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Add workout days to get started',
+              style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+            ),
+          ],
+        ),
       );
     }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: Wrap(
+        spacing: 12,
+        runSpacing: 12,
+        children: workoutDays.map((day) {
+          final isSelected = day.workouts.isNotEmpty;
+
+          return GestureDetector(
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) => WorkoutSelector(
+                  workoutDay: day,
+                  addWorkout: _addWorkout,
+                  removeWorkout: _removeWorkout,
+                ),
+              );
+            },
+            child: Material(
+              elevation: isSelected ? 8 : 2,
+              borderRadius: BorderRadius.circular(16),
+              child: Container(
+                height: 110,
+                width: 110,
+                decoration: BoxDecoration(
+                  gradient: isSelected
+                      ? const LinearGradient(
+                          colors: [Color(0xFF6A1B9A), Color(0xFF9C27B0)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        )
+                      : null,
+                  color: isSelected ? null : Theme.of(context).cardColor,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      day.dayName,
+                      style: TextStyle(
+                        color: isSelected ? Colors.white : Colors.black87,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    if (isSelected)
+                      Icon(
+                        Icons.fitness_center,
+                        size: 24,
+                        color: Colors.white,
+                      )
+                    else
+                      Text(
+                        '${day.workouts.length} workouts',
+                        style: TextStyle(
+                          color: isSelected ? Colors.white70 : Colors.grey,
+                          fontSize: 12,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
   }
 
   Widget _buildSummaryStep() {
@@ -137,6 +197,7 @@ class _WorkoutPlannerPageState extends State<WorkoutPlannerPage>
 
   Widget _buildStepperControls(BuildContext context, ControlsDetails details) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         if (details.stepIndex > 0)
           _buildStepperButton(
@@ -145,7 +206,6 @@ class _WorkoutPlannerPageState extends State<WorkoutPlannerPage>
             icon: Icons.arrow_back_rounded,
             onPressed: _onPreviousStep,
           ),
-        const SizedBox(width: 8),
         if (details.stepIndex < 2)
           _buildStepperButton(
             context,

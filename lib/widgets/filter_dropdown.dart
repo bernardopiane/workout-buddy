@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class FilterDropdown extends StatelessWidget {
@@ -19,30 +18,66 @@ class FilterDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textColor = Theme.of(context).textTheme.bodyMedium?.color; // Get text color from theme
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
-    return DropdownButton<String>(
+    // Sort options for consistent display
+    final sortedOptions = options.toList()..sort();
+
+    return DropdownButtonFormField<String?>(
       value: value,
-      hint: Text(
-        hintText,
-        style: TextStyle(color: textColor), // Apply text color to hint
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: colorScheme.surfaceVariant,
+        // Subtle background
+        hintText: hintText,
+        hintStyle: textTheme.bodyMedium?.copyWith(
+          color: colorScheme.onSurface.withOpacity(0.6),
+        ),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none, // Clean, no border
+        ),
+        isDense: true,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(width: 2, color: colorScheme.primary)),
+        // Add subtle focus indicator
+        prefixIcon: Icon(Icons.filter_list,
+            size: 18, color: colorScheme.primary.withOpacity(0.7)),
+        prefixIconConstraints:
+            const BoxConstraints(minWidth: 40, minHeight: 40),
       ),
+      style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface),
+      dropdownColor: colorScheme.surface,
+      // Match dark/light mode
+      icon: Icon(Icons.arrow_drop_down, color: colorScheme.primary),
+      isExpanded: true,
       onChanged: onChanged,
       items: [
         if (showAllOption)
-          DropdownMenuItem<String>(
+          DropdownMenuItem<String?>(
             value: null,
             child: Text(
-              'All ${hintText.replaceAll('Select ', '')}s',
-              style: TextStyle(color: textColor), // Apply text color to "All" option
+              'All ${hintText.replaceAll(RegExp(r'^Select\s+'), '')}',
+              style:
+                  textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface),
             ),
           ),
-        ...options.map<DropdownMenuItem<String>>((String value) {
+        ...sortedOptions.map<DropdownMenuItem<String>>((String item) {
           return DropdownMenuItem<String>(
-            value: value.toLowerCase(),
+            value: item.toLowerCase(),
             child: Text(
-              value,
-              style: TextStyle(color: textColor), // Apply text color to dropdown items
+              item,
+              style:
+                  textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface),
             ),
           );
         }),
