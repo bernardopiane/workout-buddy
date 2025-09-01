@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+final double borderRadius = 8.0;
+
+final double fontLarge = 24.0;
+final double fontMedium = 18.0;
+final double fontSmall = 14.0;
+
 final ThemeData lightTheme = ThemeData.light(
   useMaterial3: true,
 ).copyWith(
@@ -20,23 +26,11 @@ final ThemeData lightTheme = ThemeData.light(
   ),
 
   // Card theme
-  cardTheme: const CardTheme(
+  cardTheme: CardThemeData(
     elevation: 2,
     color: Colors.white,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(16.0)),
-    ),
-  ),
-
-  // Button theme
-  elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ElevatedButton.styleFrom(
-      backgroundColor: const Color(0xff5C6BC0),
-      foregroundColor: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
+      borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
     ),
   ),
 
@@ -54,6 +48,28 @@ final ThemeData lightTheme = ThemeData.light(
     color: Color(0xff5C6BC0),
   ),
 
+  // ElevatedButton theme
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xff3497f4),
+      foregroundColor: Colors.white,
+      textStyle: TextStyle(fontWeight: FontWeight.bold),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
+    ),
+  ),
+
+  // OutlinedButton theme
+  outlinedButtonTheme: OutlinedButtonThemeData(
+    style: OutlinedButton.styleFrom(
+      side: const BorderSide(color: Color(0xff5C6BC0)),
+      foregroundColor: const Color(0xff5C6BC0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
+    ),
+  ),
   // Floating action button theme
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: Color(0xff5C6BC0),
@@ -61,11 +77,11 @@ final ThemeData lightTheme = ThemeData.light(
   ),
 
   // Input decoration theme
-  inputDecorationTheme: const InputDecorationTheme(
+  inputDecorationTheme: InputDecorationTheme(
     filled: true,
     fillColor: Colors.white,
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(16.0)),
+      borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
     ),
   ),
 );
@@ -73,8 +89,8 @@ final ThemeData lightTheme = ThemeData.light(
 final ThemeData darkTheme = ThemeData.dark(
   useMaterial3: true,
 ).copyWith(
-  scaffoldBackgroundColor:
-      const Color(0xff121212), // Default background color for dark theme
+  scaffoldBackgroundColor: const Color(0xff111518),
+  // Default background color for dark theme
   primaryColor: const Color(0xff7C4DFF),
 
   // AppBar theme
@@ -90,23 +106,11 @@ final ThemeData darkTheme = ThemeData.dark(
   ),
 
   // Card theme
-  cardTheme: const CardTheme(
+  cardTheme: CardThemeData(
     elevation: 2,
-    color: Color(0xff1E1E1E),
+    color: Color(0xff1B2127),
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(16.0)),
-    ),
-  ),
-
-  // Button theme
-  elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ElevatedButton.styleFrom(
-      backgroundColor: const Color(0xff7C4DFF),
-      foregroundColor: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
+      borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
     ),
   ),
 
@@ -124,6 +128,28 @@ final ThemeData darkTheme = ThemeData.dark(
     color: Color(0xff7C4DFF),
   ),
 
+  // ElevatedButton theme
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xff3497f4),
+      foregroundColor: Colors.white,
+      textStyle: TextStyle(fontWeight: FontWeight.bold),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
+    ),
+  ),
+
+  // OutlinedButton theme
+  outlinedButtonTheme: OutlinedButtonThemeData(
+    style: OutlinedButton.styleFrom(
+      side: const BorderSide(color: Color(0xff7C4DFF)),
+      foregroundColor: const Color(0xff7C4DFF),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
+    ),
+  ),
   // Floating action button theme
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     // backgroundColor: Color(0xff7C4DFF),
@@ -132,11 +158,29 @@ final ThemeData darkTheme = ThemeData.dark(
   ),
 
   // Input decoration theme
-  inputDecorationTheme: const InputDecorationTheme(
+  inputDecorationTheme: InputDecorationTheme(
     filled: true,
     fillColor: Color(0xff1E1E1E),
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(16.0)),
+      borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
     ),
+  ),
+);
+
+final ButtonStyle secondaryElevatedButtonStyleLight = ElevatedButton.styleFrom(
+  backgroundColor: const Color(0xfff0f2f5),
+  foregroundColor: const Color(0xff111518),
+  textStyle: TextStyle(fontWeight: FontWeight.bold),
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(borderRadius),
+  ),
+);
+
+final ButtonStyle secondaryElevatedButtonStyleDark = ElevatedButton.styleFrom(
+  backgroundColor: const Color(0xff283139),
+  foregroundColor: const Color(0xffffffff),
+  textStyle: TextStyle(fontWeight: FontWeight.bold),
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(borderRadius),
   ),
 );
