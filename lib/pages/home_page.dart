@@ -17,6 +17,7 @@ import '../model/workout_day.dart';
 import '../model/workout_plan.dart';
 import '../utils/date_utils.dart';
 import 'home/home_page_v2.dart';
+import 'home/home_v4.dart';
 import 'main_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -176,7 +177,7 @@ class HomePage extends StatelessWidget {
         boxShadow: [
           // TODO Play around with shadows and colors
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 2,
             blurRadius: 8,
             offset: const Offset(0, 2),
@@ -289,8 +290,8 @@ class HomePage extends StatelessWidget {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side:
-            BorderSide(color: Theme.of(context).dividerColor.withOpacity(0.5)),
+        side: BorderSide(
+            color: Theme.of(context).dividerColor.withValues(alpha: 0.5)),
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
@@ -308,7 +309,7 @@ class HomePage extends StatelessWidget {
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -364,8 +365,8 @@ class HomePage extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
-        border:
-            Border.all(color: Theme.of(context).dividerColor.withOpacity(0.5)),
+        border: Border.all(
+            color: Theme.of(context).dividerColor.withValues(alpha: 0.5)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -435,7 +436,7 @@ class HomePage extends StatelessWidget {
               Theme.of(context)
                   .colorScheme
                   .primary
-                  .withOpacity(0.1), // Light primary color
+                  .withValues(alpha: 0.1), // Light primary color
               Colors.white,
             ],
           ),
@@ -495,8 +496,8 @@ class HomePage extends StatelessWidget {
                     backgroundColor: Colors.grey.shade300,
                     valueColor: AlwaysStoppedAnimation<Color>(
                       percentage >= 100
-                          ? Theme.of(context).colorScheme.primary.withOpacity(
-                              0.8) // Assuming a success color is defined
+                          ? Theme.of(context).colorScheme.primary.withValues(
+                              alpha: 0.8) // Assuming a success color is defined
                           : Theme.of(context)
                               .colorScheme
                               .primary, // Primary color for progress
@@ -515,7 +516,7 @@ class HomePage extends StatelessWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.7),
+                            .withValues(alpha: 0.7),
                       ),
                     ),
                     Text(
@@ -549,6 +550,7 @@ class HomePage extends StatelessWidget {
   Widget _buildNavigationButtons(BuildContext context) {
     final buttons = [
       {'text': 'Home 2', 'page': const HomeV3()},
+      {'text': 'Home 3', 'page': const HomeV4()},
       {'text': 'Main Page', 'page': const MainPage()},
       {'text': 'User Page', 'page': const UserPage()},
       {'text': 'Workout Plan Manager', 'page': const WorkoutPlanManagerPage()},
