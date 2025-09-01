@@ -69,7 +69,7 @@ class _WorkoutSelectorState extends State<WorkoutSelector> {
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 12,
                 offset: const Offset(0, -4),
               ),
@@ -86,7 +86,7 @@ class _WorkoutSelectorState extends State<WorkoutSelector> {
                   height: 4,
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   decoration: BoxDecoration(
-                    color: colorScheme.outline.withOpacity(0.4),
+                    color: colorScheme.outline.withValues(alpha: 0.4),
                     // ✅ Theme-aware
                     borderRadius: BorderRadius.circular(2),
                   ),
@@ -108,11 +108,11 @@ class _WorkoutSelectorState extends State<WorkoutSelector> {
                 autofocus: true,
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: colorScheme.surfaceVariant,
+                  fillColor: colorScheme.surfaceContainerHighest,
                   // ✅ Subtle fill
                   hintText: 'Search exercises...',
-                  hintStyle: textTheme.bodyMedium
-                      ?.copyWith(color: colorScheme.onSurface.withOpacity(0.6)),
+                  hintStyle: textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurface.withValues(alpha: 0.6)),
                   prefixIcon: Icon(Icons.search, color: colorScheme.primary),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -155,7 +155,7 @@ class _WorkoutSelectorState extends State<WorkoutSelector> {
                     // ✅ Theme primary
                     side: !isSelected
                         ? BorderSide(
-                            color: colorScheme.outline.withOpacity(0.3))
+                            color: colorScheme.outline.withValues(alpha: 0.3))
                         : null,
                   );
                 }).toList(),
@@ -200,7 +200,7 @@ class _WorkoutSelectorState extends State<WorkoutSelector> {
               Text(
                 '${filteredExercises.length} exercise(s) found',
                 style: textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurface.withOpacity(0.7),
+                  color: colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
               ),
               const SizedBox(height: 8),
@@ -213,7 +213,7 @@ class _WorkoutSelectorState extends State<WorkoutSelector> {
                         child: Text(
                           'No exercises match your filters',
                           style: textTheme.bodyMedium?.copyWith(
-                            color: colorScheme.onSurface.withOpacity(0.6),
+                            color: colorScheme.onSurface.withValues(alpha: 0.6),
                             fontStyle: FontStyle.italic,
                           ),
                         ),
@@ -254,8 +254,9 @@ class _WorkoutSelectorState extends State<WorkoutSelector> {
                             exercise.primaryMuscles?.join(', ') ?? ''
                           ].join(' • '),
                           style: textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurface.withOpacity(0.7),
-                          ),
+                                  color: colorScheme.onSurface
+                                      .withValues(alpha: 0.7),
+                                ),
                         ),
                         value: isSelected,
                         onChanged: (value) {

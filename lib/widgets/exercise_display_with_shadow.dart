@@ -55,7 +55,7 @@ class ExerciseDisplayWithShadow extends StatelessWidget {
               color: Colors.white,
               shadows: [
                 Shadow(
-                  color: Colors.black.withOpacity(0.7),
+                  color: Colors.black.withValues(alpha: 0.7),
                   offset: const Offset(0, 2),
                   blurRadius: 6,
                 )
@@ -77,7 +77,7 @@ class ExerciseDisplayWithShadow extends StatelessWidget {
               fontWeight: FontWeight.bold,
               shadows: [
                 Shadow(
-                  color: Colors.black.withOpacity(0.5),
+                  color: Colors.black.withValues(alpha: 0.5),
                   offset: const Offset(0, 1),
                   blurRadius: 4,
                 ),
@@ -91,8 +91,10 @@ class ExerciseDisplayWithShadow extends StatelessWidget {
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              splashColor:
-                  Theme.of(context).colorScheme.secondary.withOpacity(0.4),
+              splashColor: Theme.of(context)
+                  .colorScheme
+                  .secondary
+                  .withValues(alpha: 0.4),
               onTap: () {
                 Navigator.push(
                   context,

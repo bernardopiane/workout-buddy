@@ -110,14 +110,17 @@ class _ExerciseListSidebarState extends State<ExerciseListSidebar> {
       child: Chip(
         label: Text(label),
         backgroundColor: isSelected
-            ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
+            ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)
             : Theme.of(context).colorScheme.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
           side: BorderSide(
             color: isSelected
                 ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
+                : Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.12),
             width: 1.0,
           ),
         ),

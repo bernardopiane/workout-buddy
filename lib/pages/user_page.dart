@@ -341,7 +341,9 @@ class UserPage extends StatelessWidget {
                       dotData: FlDotData(show: true),
                       belowBarData: BarAreaData(
                         show: true,
-                        color: Theme.of(context).primaryColor.withOpacity(0.2),
+                        color: Theme.of(context)
+                            .primaryColor
+                            .withValues(alpha: 0.2),
                       ),
                     ),
                   ],

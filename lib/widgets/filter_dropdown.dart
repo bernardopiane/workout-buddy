@@ -26,14 +26,14 @@ class FilterDropdown extends StatelessWidget {
     final sortedOptions = options.toList()..sort();
 
     return DropdownButtonFormField<String?>(
-      value: value,
+      initialValue: value,
       decoration: InputDecoration(
         filled: true,
-        fillColor: colorScheme.surfaceVariant,
+        fillColor: colorScheme.surfaceContainerHighest,
         // Subtle background
         hintText: hintText,
         hintStyle: textTheme.bodyMedium?.copyWith(
-          color: colorScheme.onSurface.withOpacity(0.6),
+          color: colorScheme.onSurface.withValues(alpha: 0.6),
         ),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -51,7 +51,7 @@ class FilterDropdown extends StatelessWidget {
             borderSide: BorderSide(width: 2, color: colorScheme.primary)),
         // Add subtle focus indicator
         prefixIcon: Icon(Icons.filter_list,
-            size: 18, color: colorScheme.primary.withOpacity(0.7)),
+            size: 18, color: colorScheme.primary.withValues(alpha: 0.7)),
         prefixIconConstraints:
             const BoxConstraints(minWidth: 40, minHeight: 40),
       ),

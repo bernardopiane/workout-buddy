@@ -64,7 +64,8 @@ class _ExerciseImageDisplayState extends State<ExerciseImageDisplay> {
                     right: 10,
                     child: Icon(
                       Icons.touch_app,
-                      color: Colors.white.withOpacity(0.2), // Subtle icon color
+                      color: Colors.white.withValues(alpha: 0.2),
+                      // Subtle icon color
                       size: 30.0, // Subtle icon size
                     ),
                   )

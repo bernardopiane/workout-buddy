@@ -159,7 +159,8 @@ class WorkoutDetailsPage extends StatelessWidget {
   Widget _buildMuscleChip(BuildContext context, String muscle) {
     return Chip(
       label: Text(capitalize(muscle)),
-      backgroundColor: Theme.of(context).colorScheme.secondary.withOpacity(0.7),
+      backgroundColor:
+          Theme.of(context).colorScheme.secondary.withValues(alpha: 0.7),
       labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSecondary),
     );
   }
