@@ -16,7 +16,6 @@ import '../model/user_data.dart';
 import '../model/workout_day.dart';
 import '../model/workout_plan.dart';
 import '../utils/date_utils.dart';
-import 'home/home_page_v2.dart';
 import 'home/home_v4.dart';
 import 'main_page.dart';
 

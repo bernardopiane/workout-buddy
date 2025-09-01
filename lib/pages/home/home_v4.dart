@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:workout_buddy/pages/home/progress_overview.dart';
 import 'package:workout_buddy/pages/home/quick_actions.dart';
 
+import '../../model/user_data.dart';
 import '../settings_page.dart';
 
 class HomeV4 extends StatefulWidget {
@@ -111,9 +113,7 @@ class _HomeV4State extends State<HomeV4> with SingleTickerProviderStateMixin {
                       //   ],
                       // ),
                       SizedBox(height: 20),
-                      Text('Welcome back, USERNAME',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
+                      WelcomeTitle(),
                       SizedBox(height: 20),
                       Text('Stats Content'),
                       SizedBox(height: 20),
@@ -133,5 +133,18 @@ class _HomeV4State extends State<HomeV4> with SingleTickerProviderStateMixin {
         ),
       ),
     );
+  }
+}
+
+class WelcomeTitle extends StatelessWidget {
+  const WelcomeTitle({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('Welcome back, ${context.read<UserData>().name}',
+        style: Theme.of(context).textTheme.headlineMedium);
+    //   TODO Styling
   }
 }

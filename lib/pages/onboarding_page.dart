@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+
+// import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workout_buddy/model/settings.dart';
 import 'package:workout_buddy/model/user_data.dart';
 
