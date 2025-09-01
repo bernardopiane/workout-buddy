@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workout_buddy/pages/home/progress_overview.dart';
 import 'package:workout_buddy/pages/home/quick_actions.dart';
 
 import '../settings_page.dart';
@@ -118,7 +119,7 @@ class _HomeV4State extends State<HomeV4> with SingleTickerProviderStateMixin {
                       SizedBox(height: 20),
                       QuickActions(),
                       SizedBox(height: 20),
-                      Text('Progress Overview'),
+                      ProgressOverview(),
                     ],
                   ),
                 ),

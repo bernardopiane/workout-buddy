@@ -10,9 +10,9 @@ class QuickActions extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Quick Actions',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          style: titleTextStyle,
         ),
         const SizedBox(height: 16),
         Row(

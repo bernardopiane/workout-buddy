@@ -6,6 +6,15 @@ final double fontLarge = 24.0;
 final double fontMedium = 18.0;
 final double fontSmall = 14.0;
 
+final TextStyle titleTextStyle = TextStyle(
+  fontSize: fontLarge,
+  fontWeight: FontWeight.bold,
+);
+
+final TextStyle bodyTextStyle = TextStyle(
+  fontSize: fontMedium,
+);
+
 final ThemeData lightTheme = ThemeData.light(
   useMaterial3: true,
 ).copyWith(
