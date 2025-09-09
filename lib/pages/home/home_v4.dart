@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:workout_buddy/model/workout_day.dart';
 import 'package:workout_buddy/pages/home/progress_overview.dart';
 import 'package:workout_buddy/pages/home/quick_actions.dart';
 import 'package:workout_buddy/pages/userprofile/user_profile_page.dart';
+import 'package:workout_buddy/providers/workout_plan_manager.dart';
 import 'package:workout_buddy/widgets/my_app_bar.dart';
 
 import '../../model/user_data.dart';
+import '../../model/workout_plan.dart';
 
 class HomeV4 extends StatefulWidget {
   const HomeV4({super.key});
@@ -376,15 +379,21 @@ class StatsSection extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: _StatCard(
-                title: 'Workouts',
-                value: '2',
-                icon: Icons.fitness_center,
-                color: colorScheme.primary,
-              ),
+              child: Selector<WorkoutPlanManager, WorkoutDay>(
+                  selector: (context, workoutPlanManager) =>
+                      workoutPlanManager.selectedPlan!.getTodayWorkouts(),
+                  builder: (context, workoutDay, child) {
+                    return _StatCard(
+                      title: 'Workouts',
+                      value: workoutDay.workouts.length.toString(),
+                      icon: Icons.fitness_center,
+                      color: colorScheme.primary,
+                    );
+                  }),
             ),
             const SizedBox(width: 12),
             Expanded(
+              // TODO: Implement calories burned calculation
               child: _StatCard(
                 title: 'Calories',
                 value: '450',
@@ -394,6 +403,7 @@ class StatsSection extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             Expanded(
+              // TODO: Implement duration calculation
               child: _StatCard(
                 title: 'Duration',
                 value: '85m',

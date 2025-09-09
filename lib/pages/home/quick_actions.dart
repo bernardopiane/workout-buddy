@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:workout_buddy/pages/exercise_list_page.dart';
 
 import '../../theme_data.dart';
+import '../today_workout_page/today_workout_page.dart';
 
 class QuickActions extends StatelessWidget {
   const QuickActions({super.key});
@@ -40,6 +42,11 @@ class SecondaryButton extends StatelessWidget {
           : secondaryElevatedButtonStyleDark,
       onPressed: () {
         // TODO Handle action 2
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const ExerciseListPage(),
+          ),
+        );
       },
       child: const Text('Browse Exercises'),
     );
@@ -56,6 +63,11 @@ class PrimaryButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: () {
         // TODO Handle action 1
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const TodayWorkoutPage(),
+          ),
+        );
       },
       child: const Text('Start Workout'),
     );
