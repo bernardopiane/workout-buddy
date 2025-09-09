@@ -12,6 +12,7 @@ class UserData extends ChangeNotifier {
   double weightGoal;
   List<UserWeightHistory> weightHistory; // Non-nullable
   DateTime? lastWeightDate;
+  String? profileImageUrl;
 
   UserData({
     this.name = '',
@@ -21,6 +22,7 @@ class UserData extends ChangeNotifier {
     this.weightGoal = 0.0,
     List<UserWeightHistory>? weightHistory,
     DateTime? lastWeightDate, // Nullable parameter
+    this.profileImageUrl = "",
   }) : weightHistory = weightHistory ?? []; // Initialize in initializer list
 
   setName(String name) {
@@ -54,6 +56,11 @@ class UserData extends ChangeNotifier {
   setWeightGoal(double weightGoal) {
     assert(weightGoal >= 0, 'Weight goal cannot be negative');
     this.weightGoal = weightGoal;
+    notifyListeners();
+  }
+
+  setProfileImageUrl(String url) {
+    profileImageUrl = url;
     notifyListeners();
   }
 
@@ -95,6 +102,7 @@ class UserData extends ChangeNotifier {
               .toList()
           : [],
       //
+      profileImageUrl: json['profileImageUrl'] ?? "",
     );
   }
 
@@ -108,6 +116,7 @@ class UserData extends ChangeNotifier {
     // Get the last weight date in DateTime format
     data['lastWeightDate'] = lastWeightDate?.toIso8601String();
     data['weightHistory'] = weightHistory.map((e) => e.toJson()).toList();
+    data['profileImageUrl'] = profileImageUrl;
     return data;
   }
 
@@ -139,6 +148,8 @@ class UserData extends ChangeNotifier {
             .map((item) => UserWeightHistory.fromJson(item))
             .toList();
       }
+
+      profileImageUrl = decodedData['profileImageUrl'];
 
       notifyListeners();
       debugPrint("User data loaded");
